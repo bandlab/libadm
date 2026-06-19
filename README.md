@@ -16,6 +16,47 @@ related applications with minimal dependencies.
 [Read the documentation](https://libadm.readthedocs.io/en/latest/) to get
 started.
 
+## BandLab fork: vendored Boost
+
+This is BandLab's fork of `libadm`. Unlike upstream — which expects Boost header
+libraries to be available on the system — this fork **bundles** the minimal
+header-only Boost subset that `libadm` needs, in the [`boost/`](boost) directory,
+pinned to a known-good version (Boost 1.84). Consumers therefore need **no system
+Boost and no `find_package(Boost)`**: the CMake build provides the `Boost::boost`
+target from the bundled headers. This makes the library self-contained and
+reproducible across all targets, including cross-compilation.
+
+Pinning the Boost version matters here. A newer Boost is not necessarily safe —
+for example, Boost 1.90 crashes the Android NDK clang while compiling `libadm`,
+whereas the vendored 1.84 builds cleanly on desktop, iOS and Android.
+
+### Regenerating the Boost subset
+
+The committed `boost/` directory is ready to use; you only need to regenerate it
+when bumping the Boost version or when a `libadm` change pulls in a new Boost
+header. Boost's macro / computed / compiler-conditional includes make a precise
+per-header trace unreliable (it silently misses headers under different compile
+flags), so use Boost's own `bcp` tool, which copies each used library plus its
+closure conservatively:
+
+```sh
+# 1. Build bcp from a Boost release (e.g. boost_1_84_0):
+./bootstrap.sh && ./b2 tools/bcp
+
+# 2. Extract the libraries libadm includes (grep `boost/` in include/ + src/) into boost/:
+./dist/bin/bcp --boost=<boost-src> \
+    variant optional rational format \
+    boost/functional/hash.hpp boost/integer/common_factor.hpp \
+    boost/iterator/iterator_adaptor.hpp boost/range/iterator_range_core.hpp \
+    boost/version.hpp \
+    <this-repo>/boost
+
+# 3. Keep only headers (bcp also copies sources/tests/docs):
+( cd <this-repo>/boost && rm -rf libs doc tools more status )
+```
+
+Verify by building against desktop, iOS and Android before committing.
+
 ## Features
 
 - minimal dependencies
