@@ -8,7 +8,7 @@ embed_resource(
         BASE_NAME resources
         RESOURCE_FILES ${PROJECT_SOURCE_DIR}/resources/common_definitions.xml)
 
-add_library(adm
+add_library(adm OBJECT
   document.cpp
   errors.cpp
   common_definitions.cpp
@@ -59,7 +59,7 @@ add_library(adm
   utilities/id_assignment.cpp
   utilities/object_creation.cpp
   path.cpp
-  private/copy.cpp
+  private/copy_impl.cpp
   private/rapidxml_wrapper.cpp
   private/rapidxml_formatter.cpp
   private/xml_writer.cpp
