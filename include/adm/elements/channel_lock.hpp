@@ -1,7 +1,7 @@
 /// @file channel_lock.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include "adm/detail/named_type.hpp"
 
 #include "adm/detail/named_option_helper.hpp"
@@ -107,8 +107,8 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<ChannelLockFlag>::tag);
     ADM_EXPORT void unset(detail::ParameterTraits<MaxDistance>::tag);
 
-    boost::optional<ChannelLockFlag> channelLockFlag_;
-    boost::optional<MaxDistance> maxDistance_;
+    std::optional<ChannelLockFlag> channelLockFlag_;
+    std::optional<MaxDistance> maxDistance_;
 
     static const ChannelLockFlag channelLockFlagDefault_;
   };

@@ -1,7 +1,7 @@
 /// @file jump_position.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <chrono>
 #include "adm/detail/named_option_helper.hpp"
 #include "adm/detail/named_type.hpp"
@@ -107,8 +107,8 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<JumpPositionFlag>::tag);
     ADM_EXPORT void unset(detail::ParameterTraits<InterpolationLength>::tag);
 
-    boost::optional<JumpPositionFlag> jumpPositionFlag_;
-    boost::optional<InterpolationLength> interpolationLength_;
+    std::optional<JumpPositionFlag> jumpPositionFlag_;
+    std::optional<InterpolationLength> interpolationLength_;
 
     static const JumpPositionFlag jumpPositionFlagDefault_;
     static const InterpolationLength interpolationLengthDefault_;

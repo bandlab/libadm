@@ -1,7 +1,7 @@
 /// @file audio_programme.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <memory>
 #include <vector>
 #include "adm/elements/label.hpp"
@@ -277,12 +277,12 @@ namespace adm {
     std::weak_ptr<Document> parent_;
     AudioProgrammeId id_;
     AudioProgrammeName name_;
-    boost::optional<AudioProgrammeLanguage> language_;
-    boost::optional<Start> start_;
-    boost::optional<End> end_;
+    std::optional<AudioProgrammeLanguage> language_;
+    std::optional<Start> start_;
+    std::optional<End> end_;
     std::vector<std::shared_ptr<AudioContent>> audioContents_;
-    boost::optional<MaxDuckingDepth> maxDuckingDepth_;
-    boost::optional<AudioProgrammeReferenceScreen> refScreen_;
+    std::optional<MaxDuckingDepth> maxDuckingDepth_;
+    std::optional<AudioProgrammeReferenceScreen> refScreen_;
   };
   ///@}
 

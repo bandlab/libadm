@@ -2,8 +2,6 @@ include(CMakeFindDependencyMacro)
 
 @PACKAGE_INIT@
 
-find_dependency(Boost 1.57)
-
 set(errorVar ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE)
 set(foundVar ${CMAKE_FIND_PACKAGE_NAME}_FOUND)
 set(findQuietly ${${CMAKE_FIND_PACKAGE_NAME}_FIND_QUIETLY})

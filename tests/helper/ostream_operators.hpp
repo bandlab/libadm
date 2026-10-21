@@ -11,14 +11,14 @@ namespace adm {
                   << time.denominator() << "}";
   }
 
-  // required because catch2 stringify doesn't know about boost::variants
+  // required because catch2 stringify doesn't know about std::variants
   std::ostream& operator<<(std::ostream& stream,
                            const std::chrono::nanoseconds& time) {
     return stream << "nanoseconds{" << time.count() << "}";
   }
 
   std::ostream& operator<<(std::ostream& stream, const Time& time) {
-    return boost::apply_visitor(
+    return std::visit(
         [&](const auto& t) -> std::ostream& { return stream << t; },
         time.asVariant());
   }

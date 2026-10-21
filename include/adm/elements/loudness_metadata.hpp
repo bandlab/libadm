@@ -4,7 +4,7 @@
 #include "adm/detail/auto_base.hpp"
 #include "adm/detail/optional_comparison.hpp"
 #include "adm/export.h"
-#include <boost/optional.hpp>
+#include <optional>
 #include <string>
 #include <ostream>
 #include <vector>
@@ -176,15 +176,15 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<MaxShortTerm>::tag);
     ADM_EXPORT void unset(detail::ParameterTraits<DialogueLoudness>::tag);
 
-    boost::optional<LoudnessMethod> loudnessMethod_;
-    boost::optional<LoudnessRecType> loudnessRecType_;
-    boost::optional<LoudnessCorrectionType> loudnessCorrectionType_;
-    boost::optional<IntegratedLoudness> integratedLoudness_;
-    boost::optional<LoudnessRange> loudnessRange_;
-    boost::optional<MaxTruePeak> maxTruePeak_;
-    boost::optional<MaxMomentary> maxMomentary_;
-    boost::optional<MaxShortTerm> maxShortTerm_;
-    boost::optional<DialogueLoudness> dialogueLoudness_;
+    std::optional<LoudnessMethod> loudnessMethod_;
+    std::optional<LoudnessRecType> loudnessRecType_;
+    std::optional<LoudnessCorrectionType> loudnessCorrectionType_;
+    std::optional<IntegratedLoudness> integratedLoudness_;
+    std::optional<LoudnessRange> loudnessRange_;
+    std::optional<MaxTruePeak> maxTruePeak_;
+    std::optional<MaxMomentary> maxMomentary_;
+    std::optional<MaxShortTerm> maxShortTerm_;
+    std::optional<DialogueLoudness> dialogueLoudness_;
   };
 
   // ---- Implementation ---- //

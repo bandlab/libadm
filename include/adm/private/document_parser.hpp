@@ -47,13 +47,13 @@ namespace adm {
         NodePtr node);
     Label parseLabel(NodePtr node);
     AudioBlockFormatObjects parseAudioBlockFormatObjects(
-        NodePtr node, boost::optional<TimeReference> timeReference);
+        NodePtr node, std::optional<TimeReference> timeReference);
     Gain parseGain(NodePtr node);
     ChannelLock parseChannelLock(NodePtr node);
     ObjectDivergence parseObjectDivergence(NodePtr node);
     JumpPosition parseJumpPosition(NodePtr node);
     AudioBlockFormatDirectSpeakers parseAudioBlockFormatDirectSpeakers(
-        NodePtr node, boost::optional<TimeReference> timeReference);
+        NodePtr node, std::optional<TimeReference> timeReference);
     SphericalSpeakerPosition parseSphericalSpeakerPosition(
         const std::vector<std::pair<NodePtr, SphericalCoordinateValue>>&
             sphericalCoordinates);
@@ -65,9 +65,9 @@ namespace adm {
     SpeakerLabel parseSpeakerLabel(NodePtr node);
     HeadphoneVirtualise parseHeadphoneVirtualise(NodePtr node);
     AudioBlockFormatHoa parseAudioBlockFormatHoa(
-        NodePtr node, boost::optional<TimeReference> timeReference);
+        NodePtr node, std::optional<TimeReference> timeReference);
     AudioBlockFormatBinaural parseAudioBlockFormatBinaural(
-        NodePtr node, boost::optional<TimeReference> timeReference);
+        NodePtr node, std::optional<TimeReference> timeReference);
     Profile parseProfile(NodePtr node);
     ProfileList parseProfileList(NodePtr node);
 
@@ -95,7 +95,7 @@ namespace adm {
           rapidxml::file<> file, ParserOptions options = ParserOptions::none,
           std::shared_ptr<Document> destDocument = Document::create());
 
-      boost::optional<TimeReference> getTimeReference() const;
+      std::optional<TimeReference> getTimeReference() const;
 
       std::shared_ptr<AudioProgramme> parseAudioProgramme(NodePtr node);
       std::shared_ptr<AudioContent> parseAudioContent(NodePtr node);
@@ -109,7 +109,7 @@ namespace adm {
       rapidxml::file<> xmlFile_;
       ParserOptions options_;
       std::shared_ptr<Document> document_;
-      boost::optional<FrameHeader> frameHeader_;
+      std::optional<FrameHeader> frameHeader_;
 
       // clang-format off
       std::map<std::shared_ptr<AudioProgramme>, std::vector<AudioContentId>> programmeContentRefs_;

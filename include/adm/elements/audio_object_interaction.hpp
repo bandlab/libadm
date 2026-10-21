@@ -6,7 +6,7 @@
 #include "adm/detail/named_type.hpp"
 #include "adm/detail/named_option_helper.hpp"
 
-#include <boost/optional.hpp>
+#include <optional>
 #include "adm/export.h"
 
 namespace adm {
@@ -131,10 +131,10 @@ namespace adm {
         detail::ParameterTraits<PositionInteractionRange>::tag);
 
     OnOffInteract onOffInteract_;
-    boost::optional<GainInteract> gainInteract_;
-    boost::optional<PositionInteract> positionInteract_;
-    boost::optional<GainInteractionRange> gainInteractionRange_;
-    boost::optional<PositionInteractionRange> positionInteractionRange_;
+    std::optional<GainInteract> gainInteract_;
+    std::optional<PositionInteract> positionInteract_;
+    std::optional<GainInteractionRange> gainInteractionRange_;
+    std::optional<PositionInteractionRange> positionInteractionRange_;
   };
 
   // ---- Implementation ---- //

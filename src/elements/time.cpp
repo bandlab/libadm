@@ -1,5 +1,6 @@
 #include "adm/elements/time.hpp"
-#include <boost/integer/common_factor.hpp>
+#include <cstdint>
+#include <numeric>
 #include <cmath>
 #include <iomanip>
 #include <regex>
@@ -19,8 +20,7 @@ namespace adm {
     return {numerator() / gcd, denominator() / gcd};
   }
 
-  struct AsNanosecondsVisitor
-      : public boost::static_visitor<std::chrono::nanoseconds> {
+  struct AsNanosecondsVisitor {
     std::chrono::nanoseconds operator()(
         const std::chrono::nanoseconds& time) const {
       return time;
@@ -33,7 +33,7 @@ namespace adm {
     }
   };
 
-  struct AsFractionalVisitor : public boost::static_visitor<FractionalTime> {
+  struct AsFractionalVisitor {
     FractionalTime operator()(const std::chrono::nanoseconds& time) const {
       return {time.count(), 1000000000};
     }
@@ -42,11 +42,11 @@ namespace adm {
   };
 
   std::chrono::nanoseconds Time::asNanoseconds() const {
-    return boost::apply_visitor(AsNanosecondsVisitor(), time);
+    return std::visit(AsNanosecondsVisitor(), time);
   }
 
   FractionalTime Time::asFractional() const {
-    return boost::apply_visitor(AsFractionalVisitor(), time);
+    return std::visit(AsFractionalVisitor(), time);
   }
 
   Time parseTimecode(const std::string& timecode) {
@@ -99,7 +99,7 @@ namespace adm {
     }
   }
 
-  struct FormatTimeVisitor : public boost::static_visitor<std::string> {
+  struct FormatTimeVisitor {
     std::string operator()(const std::chrono::nanoseconds& time) const {
       std::stringstream ss;
       auto formatTime = time;
@@ -159,7 +159,7 @@ namespace adm {
   };
 
   std::string formatTimecode(const Time& time) {
-    return boost::apply_visitor(FormatTimeVisitor(), time.asVariant());
+    return std::visit(FormatTimeVisitor(), time.asVariant());
   }
 
 }  // namespace adm

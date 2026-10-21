@@ -35,10 +35,10 @@ namespace adm {
   }
   SampleRate AudioTrackUid::get(
       detail::ParameterTraits<SampleRate>::tag) const {
-    return sampleRate_.get();
+    return sampleRate_.value();
   }
   BitDepth AudioTrackUid::get(detail::ParameterTraits<BitDepth>::tag) const {
-    return bitDepth_.get();
+    return bitDepth_.value();
   }
 
   // ---- Setter ---- //
@@ -76,18 +76,18 @@ namespace adm {
     return true;
   }
   bool AudioTrackUid::has(detail::ParameterTraits<BitDepth>::tag) const {
-    return bitDepth_ != boost::none;
+    return bitDepth_ != std::nullopt;
   }
   bool AudioTrackUid::has(detail::ParameterTraits<SampleRate>::tag) const {
-    return sampleRate_ != boost::none;
+    return sampleRate_ != std::nullopt;
   }
 
   // ---- Unsetter ---- //
   void AudioTrackUid::unset(detail::ParameterTraits<BitDepth>::tag) {
-    bitDepth_ = boost::none;
+    bitDepth_ = std::nullopt;
   }
   void AudioTrackUid::unset(detail::ParameterTraits<SampleRate>::tag) {
-    sampleRate_ = boost::none;
+    sampleRate_ = std::nullopt;
   }
 
   // ---- References ---- //

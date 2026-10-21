@@ -2,8 +2,8 @@
 #pragma once
 
 #include <vector>
-#include <boost/optional.hpp>
-#include <boost/variant.hpp>
+#include <optional>
+#include <variant>
 #include "adm/detail/named_option_helper.hpp"
 #include "adm/elements/screen_edge_lock.hpp"
 #include "adm/elements/position_types.hpp"
@@ -138,15 +138,15 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<ScreenEdgeLock>::tag);
 
     X x_;
-    boost::optional<XMin> xMin_;
-    boost::optional<XMax> xMax_;
+    std::optional<XMin> xMin_;
+    std::optional<XMax> xMax_;
     Y y_;
-    boost::optional<YMin> yMin_;
-    boost::optional<YMax> yMax_;
-    boost::optional<Z> z_;
-    boost::optional<ZMin> zMin_;
-    boost::optional<ZMax> zMax_;
-    boost::optional<ScreenEdgeLock> screenEdgeLock_;
+    std::optional<YMin> yMin_;
+    std::optional<YMax> yMax_;
+    std::optional<Z> z_;
+    std::optional<ZMin> zMin_;
+    std::optional<ZMax> zMax_;
+    std::optional<ScreenEdgeLock> screenEdgeLock_;
   };
 
   // ---- Implementation ---- //
@@ -305,15 +305,15 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<ScreenEdgeLock>::tag);
 
     Azimuth azimuth_;
-    boost::optional<AzimuthMin> azimuthMin_;
-    boost::optional<AzimuthMax> azimuthMax_;
+    std::optional<AzimuthMin> azimuthMin_;
+    std::optional<AzimuthMax> azimuthMax_;
     Elevation elevation_;
-    boost::optional<ElevationMin> elevationMin_;
-    boost::optional<ElevationMax> elevationMax_;
-    boost::optional<Distance> distance_;
-    boost::optional<DistanceMin> distanceMin_;
-    boost::optional<DistanceMax> distanceMax_;
-    boost::optional<ScreenEdgeLock> screenEdgeLock_;
+    std::optional<ElevationMin> elevationMin_;
+    std::optional<ElevationMax> elevationMax_;
+    std::optional<Distance> distance_;
+    std::optional<DistanceMin> distanceMin_;
+    std::optional<DistanceMax> distanceMax_;
+    std::optional<ScreenEdgeLock> screenEdgeLock_;
   };
 
   // ---- Implementation ---- //

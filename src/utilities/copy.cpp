@@ -1,6 +1,6 @@
 #include "adm/utilities/copy.hpp"
 #include "adm/private/copy.hpp"
-#include <boost/variant.hpp>
+#include <variant>
 
 namespace adm {
 

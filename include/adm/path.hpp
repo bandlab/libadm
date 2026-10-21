@@ -86,7 +86,7 @@ namespace adm {
     if (foundFirst == elements_.end()) {
       throw std::logic_error("No element id of given type found");
     }
-    return boost::get<AdmElementId>(*foundFirst);
+    return std::get<AdmElementId>(*foundFirst);
   }
 
   template <typename AdmElementId>
@@ -98,7 +98,7 @@ namespace adm {
     if (foundLast == elements_.rend()) {
       throw std::logic_error("No element id of given type found");
     }
-    return boost::get<AdmElementId>(*foundLast);
+    return std::get<AdmElementId>(*foundLast);
   }
 
   template <typename AdmElementId>

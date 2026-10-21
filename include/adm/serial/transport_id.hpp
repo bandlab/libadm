@@ -1,7 +1,7 @@
 /// @file transport_id.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <string>
 #include "adm/detail/named_option_helper.hpp"
 #include "adm/detail/named_type.hpp"
@@ -103,7 +103,7 @@ namespace adm {
 
     ADM_EXPORT void unset(detail::ParameterTraits<TransportIdValue>::tag);
 
-    boost::optional<TransportIdValue> value_;
+    std::optional<TransportIdValue> value_;
 
     static const TransportIdValue valueDefault_;
   };

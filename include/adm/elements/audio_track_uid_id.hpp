@@ -1,7 +1,7 @@
 /// @file audio_track_uid_id.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <string>
 #include "adm/elements/type_descriptor.hpp"
 #include "adm/detail/named_option_helper.hpp"
@@ -109,7 +109,7 @@ namespace adm {
 
     ADM_EXPORT void unset(detail::ParameterTraits<AudioTrackUidIdValue>::tag);
 
-    boost::optional<AudioTrackUidIdValue> value_;
+    std::optional<AudioTrackUidIdValue> value_;
 
     static const AudioTrackUidIdValue valueDefault_;
   };

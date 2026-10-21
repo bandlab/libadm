@@ -1,7 +1,7 @@
 /// @file audio_block_format_objects.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include "adm/elements/channel_lock.hpp"
 #include "adm/elements/jump_position.hpp"
 #include "adm/elements/object_divergence.hpp"
@@ -277,13 +277,13 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<ObjectDivergence>::tag);
     ADM_EXPORT void unset(detail::ParameterTraits<JumpPosition>::tag);
 
-    boost::optional<Cartesian> cartesian_;
-    boost::optional<SphericalPosition> sphericalPosition_;
-    boost::optional<CartesianPosition> cartesianPosition_;
-    boost::optional<ScreenEdgeLock> screenEdgeLock_;
-    boost::optional<ChannelLock> channelLock_;
-    boost::optional<ObjectDivergence> objectDivergence_;
-    boost::optional<JumpPosition> jumpPosition_;
+    std::optional<Cartesian> cartesian_;
+    std::optional<SphericalPosition> sphericalPosition_;
+    std::optional<CartesianPosition> cartesianPosition_;
+    std::optional<ScreenEdgeLock> screenEdgeLock_;
+    std::optional<ChannelLock> channelLock_;
+    std::optional<ObjectDivergence> objectDivergence_;
+    std::optional<JumpPosition> jumpPosition_;
   };
 
   // ---- Implementation ---- //

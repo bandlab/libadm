@@ -21,11 +21,11 @@ namespace adm {
   }
   Distance SphericalPosition::get(
       detail::ParameterTraits<Distance>::tag) const {
-    return boost::get_optional_value_or(distance_, distanceDefault_);
+    return distance_.value_or(distanceDefault_);
   }
   ScreenEdgeLock SphericalPosition::get(
       detail::ParameterTraits<ScreenEdgeLock>::tag) const {
-    return screenEdgeLock_.get();
+    return screenEdgeLock_.value();
   }
 
   // ---- Has ---- //
@@ -40,13 +40,13 @@ namespace adm {
   }
   bool SphericalPosition::has(
       detail::ParameterTraits<ScreenEdgeLock>::tag) const {
-    return screenEdgeLock_ != boost::none;
+    return screenEdgeLock_ != std::nullopt;
   }
 
   // ---- isDefault ---- //
   bool SphericalPosition::isDefault(
       detail::ParameterTraits<Distance>::tag) const {
-    return distance_ == boost::none;
+    return distance_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -59,10 +59,10 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void SphericalPosition::unset(detail::ParameterTraits<Distance>::tag) {
-    distance_ = boost::none;
+    distance_ = std::nullopt;
   }
   void SphericalPosition::unset(detail::ParameterTraits<ScreenEdgeLock>::tag) {
-    screenEdgeLock_ = boost::none;
+    screenEdgeLock_ = std::nullopt;
   }
 
   // ---- CARTESIAN POSITION ---- //
@@ -77,11 +77,11 @@ namespace adm {
   X CartesianPosition::get(detail::ParameterTraits<X>::tag) const { return x_; }
   Y CartesianPosition::get(detail::ParameterTraits<Y>::tag) const { return y_; }
   Z CartesianPosition::get(detail::ParameterTraits<Z>::tag) const {
-    return boost::get_optional_value_or(z_, zDefault_);
+    return z_.value_or(zDefault_);
   }
   ScreenEdgeLock CartesianPosition::get(
       detail::ParameterTraits<ScreenEdgeLock>::tag) const {
-    return screenEdgeLock_.get();
+    return screenEdgeLock_.value();
   }
 
   // ---- Has ---- //
@@ -96,12 +96,12 @@ namespace adm {
   }
   bool CartesianPosition::has(
       detail::ParameterTraits<ScreenEdgeLock>::tag) const {
-    return screenEdgeLock_ != boost::none;
+    return screenEdgeLock_ != std::nullopt;
   }
 
   // ---- isDefault ---- //
   bool CartesianPosition::isDefault(detail::ParameterTraits<Z>::tag) const {
-    return z_ == boost::none;
+    return z_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -114,16 +114,16 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void CartesianPosition::unset(detail::ParameterTraits<Z>::tag) {
-    z_ = boost::none;
+    z_ = std::nullopt;
   }
   void CartesianPosition::unset(detail::ParameterTraits<ScreenEdgeLock>::tag) {
-    screenEdgeLock_ = boost::none;
+    screenEdgeLock_ = std::nullopt;
   }
 
   // ---- FREE FUNCTIONS ---- //
 
   bool isSpherical(const Position& position) {
-    if (position.which() == 0) {
+    if (position.index() == 0) {
       return true;
     } else {
       return false;
@@ -131,7 +131,7 @@ namespace adm {
   }
 
   bool isCartesian(const Position& position) {
-    if (position.which() == 1) {
+    if (position.index() == 1) {
       return true;
     } else {
       return false;

@@ -11,7 +11,7 @@ namespace adm {
   // ---- Getter ---- //
   TransportIdValue TransportId::get(
       detail::ParameterTraits<TransportIdValue>::tag) const {
-    return boost::get_optional_value_or(value_, valueDefault_);
+    return value_.value_or(valueDefault_);
   }
 
   // ---- Has ---- //
@@ -22,7 +22,7 @@ namespace adm {
   // ---- isDefault ---- //
   bool TransportId::isDefault(
       detail::ParameterTraits<TransportIdValue>::tag) const {
-    return value_ == boost::none;
+    return value_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -30,7 +30,7 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void TransportId::unset(detail::ParameterTraits<TransportIdValue>::tag) {
-    value_ = boost::none;
+    value_ = std::nullopt;
   }
 
   // ---- Operators ---- //

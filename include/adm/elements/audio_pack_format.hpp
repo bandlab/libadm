@@ -1,7 +1,7 @@
 /// @file audio_pack_format.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <memory>
 #include "adm/elements/audio_channel_format.hpp"
 #include "adm/elements/audio_pack_format_id.hpp"
@@ -239,8 +239,8 @@ namespace adm {
     AudioPackFormatName name_;
     AudioPackFormatId id_;
     TypeDescriptor typeDescriptor_;
-    boost::optional<Importance> importance_;
-    boost::optional<AbsoluteDistance> absoluteDistance_;
+    std::optional<Importance> importance_;
+    std::optional<AbsoluteDistance> absoluteDistance_;
     std::vector<std::shared_ptr<AudioChannelFormat>> audioChannelFormats_;
     std::vector<std::shared_ptr<AudioPackFormat>> audioPackFormats_;
   };

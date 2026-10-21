@@ -8,7 +8,7 @@
 
 ## Introduction
 
-The `libadm` library is a modern C++11 library to parse, modify, create and
+The `libadm` library is a C++20 library to parse, modify, create and
 write [`ITU-R BS.2076`](https://www.itu.int/rec/R-REC-BS.2076) conformant XML. It works well with the header-only
 library [`libbw64`](https://github.com/ebu/libbw64) to write ADM
 related applications with minimal dependencies.
@@ -16,46 +16,22 @@ related applications with minimal dependencies.
 [Read the documentation](https://libadm.readthedocs.io/en/latest/) to get
 started.
 
-## BandLab fork: vendored Boost
+## Boost-free C++20 BandLab fork
 
-This is BandLab's fork of `libadm`. Unlike upstream — which expects Boost header
-libraries to be available on the system — this fork **bundles** the minimal
-header-only Boost subset that `libadm` needs, in the [`boost/`](boost) directory,
-pinned to a known-good version (Boost 1.84). Consumers therefore need **no system
-Boost and no `find_package(Boost)`**: the CMake build provides the `Boost::boost`
-target from the bundled headers. This makes the library self-contained and
-reproducible across all targets, including cross-compilation.
+This fork keeps the `adm` target and namespace, replacing Boost.Optional,
+Variant, Range and GCD with C++20 standard-library facilities. Const smart-pointer
+iteration uses `std::ranges::transform_view`. Hash combination and normalized
+rational-time subtraction have no direct C++20 standard-library equivalent and
+use small local implementations. `RationalTime` supports construction with a positive
+denominator, equality, subtraction and numerator/denominator access; it is not a
+general-purpose replacement for Boost.Rational. Consumers must rebuild because
+public optional, variant and range types have changed. Use `std::ranges::equal`
+instead of comparing an element range directly with a container.
+Keep a const-element view alive while using its iterators; transform-view
+iterators depend on the view as well as the underlying container.
 
-Pinning the Boost version matters here. A newer Boost is not necessarily safe —
-for example, Boost 1.90 crashes the Android NDK clang while compiling `libadm`,
-whereas the vendored 1.84 builds cleanly on desktop, iOS and Android.
-
-### Regenerating the Boost subset
-
-The committed `boost/` directory is ready to use; you only need to regenerate it
-when bumping the Boost version or when a `libadm` change pulls in a new Boost
-header. Boost's macro / computed / compiler-conditional includes make a precise
-per-header trace unreliable (it silently misses headers under different compile
-flags), so use Boost's own `bcp` tool, which copies each used library plus its
-closure conservatively:
-
-```sh
-# 1. Build bcp from a Boost release (e.g. boost_1_84_0):
-./bootstrap.sh && ./b2 tools/bcp
-
-# 2. Extract the libraries libadm includes (grep `boost/` in include/ + src/) into boost/:
-./dist/bin/bcp --boost=<boost-src> \
-    variant optional rational format \
-    boost/functional/hash.hpp boost/integer/common_factor.hpp \
-    boost/iterator/iterator_adaptor.hpp boost/range/iterator_range_core.hpp \
-    boost/version.hpp \
-    <this-repo>/boost
-
-# 3. Keep only headers (bcp also copies sources/tests/docs):
-( cd <this-repo>/boost && rm -rf libs doc tools more status )
-```
-
-Verify by building against desktop, iOS and Android before committing.
+The inherited `boost/` tree is unused: neither compilation, installation nor
+the exported CMake package depends on it.
 
 ### Generic XML
 
@@ -98,15 +74,9 @@ load external entities. Parse errors throw exceptions.
 
 ## Dependencies
 
-- compiler with C++11 support
-- Boost header libraries (version 1.57 or later)
-  - Boost.Optional
-  - Boost.Variant
-  - Boost.Range
-  - Boost.Iterator
-  - Boost.Functional
-  - Boost.Format
-- CMake build system (version 3.5 or later)
+- compiler and standard library with C++20 support
+- bundled RapidXML headers
+- CMake build system (version 3.16 or later)
 
 ## Installation
 

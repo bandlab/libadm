@@ -14,11 +14,11 @@ namespace adm {
   }
   Rtime AudioBlockFormatDirectSpeakers::get(
       detail::ParameterTraits<Rtime>::tag) const {
-    return boost::get_optional_value_or(rtime_, rtimeDefault);
+    return rtime_.value_or(rtimeDefault);
   }
   Duration AudioBlockFormatDirectSpeakers::get(
       detail::ParameterTraits<Duration>::tag) const {
-    return duration_.get();
+    return duration_.value();
   }
   SpeakerLabels AudioBlockFormatDirectSpeakers::get(
       detail::ParameterTraits<SpeakerLabels>::tag) const {
@@ -26,11 +26,11 @@ namespace adm {
   }
   CartesianSpeakerPosition AudioBlockFormatDirectSpeakers::get(
       detail::ParameterTraits<CartesianSpeakerPosition>::tag) const {
-    return boost::get<CartesianSpeakerPosition>(speakerPosition_);
+    return std::get<CartesianSpeakerPosition>(speakerPosition_);
   }
   SphericalSpeakerPosition AudioBlockFormatDirectSpeakers::get(
       detail::ParameterTraits<SphericalSpeakerPosition>::tag) const {
-    return boost::get<SphericalSpeakerPosition>(speakerPosition_);
+    return std::get<SphericalSpeakerPosition>(speakerPosition_);
   }
 
   // ---- Has ---- //
@@ -44,7 +44,7 @@ namespace adm {
   }
   bool AudioBlockFormatDirectSpeakers::has(
       detail::ParameterTraits<Duration>::tag) const {
-    return duration_ != boost::none;
+    return duration_ != std::nullopt;
   }
   bool AudioBlockFormatDirectSpeakers::has(
       detail::ParameterTraits<SpeakerLabels>::tag) const {
@@ -52,17 +52,17 @@ namespace adm {
   }
   bool AudioBlockFormatDirectSpeakers::has(
       detail::ParameterTraits<CartesianSpeakerPosition>::tag) const {
-    return (boost::get<CartesianSpeakerPosition>(&speakerPosition_));
+    return (std::get_if<CartesianSpeakerPosition>(&speakerPosition_));
   }
   bool AudioBlockFormatDirectSpeakers::has(
       detail::ParameterTraits<SphericalSpeakerPosition>::tag) const {
-    return (boost::get<SphericalSpeakerPosition>(&speakerPosition_));
+    return (std::get_if<SphericalSpeakerPosition>(&speakerPosition_));
   }
 
   // ---- isDefault ---- //
   bool AudioBlockFormatDirectSpeakers::isDefault(
       detail::ParameterTraits<Rtime>::tag) const {
-    return duration_ == boost::none;
+    return duration_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -86,11 +86,11 @@ namespace adm {
   // ---- Unsetter ---- //
   void AudioBlockFormatDirectSpeakers::unset(
       detail::ParameterTraits<Rtime>::tag) {
-    rtime_ = boost::none;
+    rtime_ = std::nullopt;
   }
   void AudioBlockFormatDirectSpeakers::unset(
       detail::ParameterTraits<Duration>::tag) {
-    duration_ = boost::none;
+    duration_ = std::nullopt;
   }
   void AudioBlockFormatDirectSpeakers::unset(
       detail::ParameterTraits<SpeakerLabels>::tag) {

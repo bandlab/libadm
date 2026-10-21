@@ -397,41 +397,46 @@ TEST_CASE("add_reference_without_parent") {
   auto admDocument = Document::create();
   admDocument->add(programme);
   programme->addReference(content);
-  REQUIRE(admDocument->getElements<AudioContent>() == asVector({content}));
+  REQUIRE(std::ranges::equal(admDocument->getElements<AudioContent>(),
+                             asVector({content})));
   content->addReference(object1);
-  REQUIRE(admDocument->getElements<AudioObject>() == asVector({object1}));
+  REQUIRE(std::ranges::equal(admDocument->getElements<AudioObject>(),
+                             asVector({object1})));
   object1->addReference(trackUid);
-  REQUIRE(admDocument->getElements<AudioTrackUid>() == asVector({trackUid}));
+  REQUIRE(std::ranges::equal(admDocument->getElements<AudioTrackUid>(),
+                             asVector({trackUid})));
   object1->addReference(packFormat1);
-  REQUIRE(admDocument->getElements<AudioPackFormat>() ==
-          asVector({packFormat1}));
+  REQUIRE(std::ranges::equal(admDocument->getElements<AudioPackFormat>(),
+                             asVector({packFormat1})));
   object1->addReference(object2);
-  REQUIRE(admDocument->getElements<AudioObject>() ==
-          asVector({object1, object2}));
+  REQUIRE(std::ranges::equal(admDocument->getElements<AudioObject>(),
+                             asVector({object1, object2})));
   trackUid->setReference(trackFormat1);
-  REQUIRE(admDocument->getElements<AudioTrackFormat>() ==
-          asVector({trackFormat1}));
+  REQUIRE(std::ranges::equal(admDocument->getElements<AudioTrackFormat>(),
+                             asVector({trackFormat1})));
   trackUid->setReference(packFormat2);
-  REQUIRE(admDocument->getElements<AudioPackFormat>() ==
-          asVector({packFormat1, packFormat2}));
+  REQUIRE(std::ranges::equal(admDocument->getElements<AudioPackFormat>(),
+                             asVector({packFormat1, packFormat2})));
   packFormat1->addReference(channelFormat1);
-  REQUIRE(admDocument->getElements<AudioChannelFormat>() ==
-          asVector({channelFormat1}));
+  REQUIRE(std::ranges::equal(admDocument->getElements<AudioChannelFormat>(),
+                             asVector({channelFormat1})));
   packFormat1->addReference(packFormat3);
-  REQUIRE(admDocument->getElements<AudioPackFormat>() ==
-          asVector({packFormat1, packFormat2, packFormat3}));
+  REQUIRE(
+      std::ranges::equal(admDocument->getElements<AudioPackFormat>(),
+                         asVector({packFormat1, packFormat2, packFormat3})));
   trackFormat1->setReference(streamFormat);
-  REQUIRE(admDocument->getElements<AudioStreamFormat>() ==
-          asVector({streamFormat}));
+  REQUIRE(std::ranges::equal(admDocument->getElements<AudioStreamFormat>(),
+                             asVector({streamFormat})));
   streamFormat->setReference(packFormat4);
-  REQUIRE(admDocument->getElements<AudioPackFormat>() ==
-          asVector({packFormat1, packFormat2, packFormat3, packFormat4}));
+  REQUIRE(std::ranges::equal(
+      admDocument->getElements<AudioPackFormat>(),
+      asVector({packFormat1, packFormat2, packFormat3, packFormat4})));
   streamFormat->setReference(channelFormat2);
-  REQUIRE(admDocument->getElements<AudioChannelFormat>() ==
-          asVector({channelFormat1, channelFormat2}));
+  REQUIRE(std::ranges::equal(admDocument->getElements<AudioChannelFormat>(),
+                             asVector({channelFormat1, channelFormat2})));
   streamFormat->addReference(std::weak_ptr<AudioTrackFormat>(trackFormat2));
-  REQUIRE(admDocument->getElements<AudioTrackFormat>() ==
-          asVector({trackFormat1, trackFormat2}));
+  REQUIRE(std::ranges::equal(admDocument->getElements<AudioTrackFormat>(),
+                             asVector({trackFormat1, trackFormat2})));
 }
 
 TEST_CASE("remove_elements") {

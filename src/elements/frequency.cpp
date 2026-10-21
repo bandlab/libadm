@@ -5,18 +5,18 @@ namespace adm {
 
   // ---- Getter ---- //
   HighPass Frequency::get(detail::ParameterTraits<HighPass>::tag) const {
-    return highPassFrequency_.get();
+    return highPassFrequency_.value();
   }
   LowPass Frequency::get(detail::ParameterTraits<LowPass>::tag) const {
-    return lowPassFrequency_.get();
+    return lowPassFrequency_.value();
   }
 
   // ---- Has ---- //
   bool Frequency::has(detail::ParameterTraits<HighPass>::tag) const {
-    return highPassFrequency_ != boost::none;
+    return highPassFrequency_ != std::nullopt;
   }
   bool Frequency::has(detail::ParameterTraits<LowPass>::tag) const {
-    return lowPassFrequency_ != boost::none;
+    return lowPassFrequency_ != std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -25,10 +25,10 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void Frequency::unset(detail::ParameterTraits<HighPass>::tag) {
-    highPassFrequency_ = boost::none;
+    highPassFrequency_ = std::nullopt;
   }
   void Frequency::unset(detail::ParameterTraits<LowPass>::tag) {
-    lowPassFrequency_ = boost::none;
+    lowPassFrequency_ = std::nullopt;
   }
 
   void Frequency::print(std::ostream &os) const {

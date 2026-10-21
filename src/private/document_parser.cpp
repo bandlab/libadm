@@ -119,9 +119,9 @@ namespace adm {
       return document_;
     }
 
-    boost::optional<TimeReference> DocumentParser::getTimeReference() const {
+    std::optional<TimeReference> DocumentParser::getTimeReference() const {
       if (isSet(options_, ParserOptions::permit_time_reference_mismatch)) {
-        return boost::optional<TimeReference>{};
+        return std::optional<TimeReference>{};
       } else {
         if (!frameHeader_) {
           return TimeReference::TOTAL;
@@ -546,7 +546,7 @@ namespace adm {
       template <typename T>
       void addTimeParametersToBlock(
           NodePtr node, T& audioBlockFormat,
-          boost::optional<TimeReference> timeReference) {
+          std::optional<TimeReference> timeReference) {
         setOptionalAttribute<Rtime>(
             node, "rtime", audioBlockFormat,
             [timeReference](const std::string& timeCode) {
@@ -595,7 +595,7 @@ namespace adm {
     }  // namespace
 
     AudioBlockFormatDirectSpeakers parseAudioBlockFormatDirectSpeakers(
-        NodePtr node, boost::optional<TimeReference> timeReference) {
+        NodePtr node, std::optional<TimeReference> timeReference) {
       AudioBlockFormatDirectSpeakers audioBlockFormat;
       // clang-format off
       setOptionalAttribute<AudioBlockFormatId>(node, "audioBlockFormatID", audioBlockFormat, &parseAudioBlockFormatId);
@@ -665,7 +665,7 @@ namespace adm {
       for (auto& coord : cartesianCoordinates) {
         auto element = coord.first;
         auto axe = coord.second;
-        boost::optional<adm::BoundValue> bound;
+        std::optional<adm::BoundValue> bound;
         try {
           bound = adm::xml::parseOptionalAttribute<adm::BoundValue>(element,
                                                                     "bound");
@@ -675,31 +675,31 @@ namespace adm {
         std::string boundValue;
 
         if (axe == "X") {
-          if (bound == boost::none) {
+          if (bound == std::nullopt) {
             adm::xml::setValue<adm::X>(element, speakerPosition);
             adm::xml::setOptionalAttribute<adm::HorizontalEdge>(
                 element, "screenEdgeLock", screenEdgeLock);
-          } else if (bound.get() == "min") {
+          } else if (bound.value() == "min") {
             adm::xml::setValue<adm::XMin>(element, speakerPosition);
-          } else if (bound.get() == "max") {
+          } else if (bound.value() == "max") {
             adm::xml::setValue<adm::XMax>(element, speakerPosition);
           }
         } else if (axe == "Y") {
-          if (bound == boost::none) {
+          if (bound == std::nullopt) {
             adm::xml::setValue<adm::Y>(element, speakerPosition);
             adm::xml::setOptionalAttribute<adm::VerticalEdge>(
                 element, "screenEdgeLock", screenEdgeLock);
-          } else if (bound.get() == "min") {
+          } else if (bound.value() == "min") {
             adm::xml::setValue<adm::YMin>(element, speakerPosition);
-          } else if (bound.get() == "max") {
+          } else if (bound.value() == "max") {
             adm::xml::setValue<adm::YMax>(element, speakerPosition);
           }
         } else if (axe == "Z") {
-          if (bound == boost::none) {
+          if (bound == std::nullopt) {
             adm::xml::setValue<adm::Z>(element, speakerPosition);
-          } else if (bound.get() == "min") {
+          } else if (bound.value() == "min") {
             adm::xml::setValue<adm::ZMin>(element, speakerPosition);
-          } else if (bound.get() == "max") {
+          } else if (bound.value() == "max") {
             adm::xml::setValue<adm::ZMax>(element, speakerPosition);
           }
         }
@@ -719,31 +719,31 @@ namespace adm {
         auto axe = coordinate.second;
         auto bound = parseOptionalAttribute<BoundValue>(element, "bound");
         if (axe == "azimuth") {
-          if (bound == boost::none) {
+          if (bound == std::nullopt) {
             setValue<Azimuth>(element, speakerPosition);
             setOptionalAttribute<HorizontalEdge>(element, "screenEdgeLock",
                                                  screenEdgeLock);
-          } else if (bound.get() == "min") {
+          } else if (bound.value() == "min") {
             setValue<AzimuthMin>(element, speakerPosition);
-          } else if (bound.get() == "max") {
+          } else if (bound.value() == "max") {
             setValue<AzimuthMax>(element, speakerPosition);
           }
         } else if (axe == "elevation") {
-          if (bound == boost::none) {
+          if (bound == std::nullopt) {
             setValue<Elevation>(element, speakerPosition);
             setOptionalAttribute<VerticalEdge>(element, "screenEdgeLock",
                                                screenEdgeLock);
-          } else if (bound.get() == "min") {
+          } else if (bound.value() == "min") {
             setValue<ElevationMin>(element, speakerPosition);
-          } else if (bound.get() == "max") {
+          } else if (bound.value() == "max") {
             setValue<ElevationMax>(element, speakerPosition);
           }
         } else if (axe == "distance") {
-          if (bound == boost::none) {
+          if (bound == std::nullopt) {
             setValue<Distance>(element, speakerPosition);
-          } else if (bound.get() == "min") {
+          } else if (bound.value() == "min") {
             setValue<DistanceMin>(element, speakerPosition);
-          } else if (bound.get() == "max") {
+          } else if (bound.value() == "max") {
             setValue<DistanceMax>(element, speakerPosition);
           }
         }
@@ -765,7 +765,7 @@ namespace adm {
     }
 
     AudioBlockFormatObjects parseAudioBlockFormatObjects(
-        NodePtr node, boost::optional<TimeReference> timeReference) {
+        NodePtr node, std::optional<TimeReference> timeReference) {
       AudioBlockFormatObjects audioBlockFormat{SphericalPosition()};
       // clang-format off
       setOptionalAttribute<AudioBlockFormatId>(node, "audioBlockFormatID", audioBlockFormat, &parseAudioBlockFormatId);
@@ -1002,7 +1002,7 @@ namespace adm {
     }
 
     AudioBlockFormatHoa parseAudioBlockFormatHoa(
-        NodePtr node, boost::optional<TimeReference> timeReference) {
+        NodePtr node, std::optional<TimeReference> timeReference) {
       AudioBlockFormatHoa audioBlockFormat{Order(), Degree()};
       // clang-format off
       setOptionalAttribute<AudioBlockFormatId>(node, "audioBlockFormatID", audioBlockFormat, &parseAudioBlockFormatId);
@@ -1023,7 +1023,7 @@ namespace adm {
     }
 
     AudioBlockFormatBinaural parseAudioBlockFormatBinaural(
-        NodePtr node, boost::optional<TimeReference> timeReference) {
+        NodePtr node, std::optional<TimeReference> timeReference) {
       AudioBlockFormatBinaural audioBlockFormat;
 
       addTimeParametersToBlock(node, audioBlockFormat, timeReference);

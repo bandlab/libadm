@@ -11,11 +11,11 @@ namespace adm {
     return id_;
   }
   Rtime AudioBlockFormatMatrix::get(detail::ParameterTraits<Rtime>::tag) const {
-    return boost::get_optional_value_or(rtime_, rtimeDefault);
+    return rtime_.value_or(rtimeDefault);
   }
   Duration AudioBlockFormatMatrix::get(
       detail::ParameterTraits<Duration>::tag) const {
-    return duration_.get();
+    return duration_.value();
   }
 
   // ---- Has ---- //
@@ -28,13 +28,13 @@ namespace adm {
   }
   bool AudioBlockFormatMatrix::has(
       detail::ParameterTraits<Duration>::tag) const {
-    return duration_ != boost::none;
+    return duration_ != std::nullopt;
   }
 
   // ---- isDefault ---- //
   bool AudioBlockFormatMatrix::isDefault(
       detail::ParameterTraits<Rtime>::tag) const {
-    return duration_ == boost::none;
+    return duration_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -44,10 +44,10 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void AudioBlockFormatMatrix::unset(detail::ParameterTraits<Rtime>::tag) {
-    rtime_ = boost::none;
+    rtime_ = std::nullopt;
   }
   void AudioBlockFormatMatrix::unset(detail::ParameterTraits<Duration>::tag) {
-    duration_ = boost::none;
+    duration_ = std::nullopt;
   }
 
 }  // namespace adm

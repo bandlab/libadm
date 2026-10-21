@@ -1,7 +1,7 @@
 /// @file audio_track_uid.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <memory>
 #include "adm/elements/audio_pack_format.hpp"
 #include "adm/elements/audio_track_format.hpp"
@@ -230,8 +230,8 @@ namespace adm {
 
     std::weak_ptr<Document> parent_;
     AudioTrackUidId id_;
-    boost::optional<BitDepth> bitDepth_;
-    boost::optional<SampleRate> sampleRate_;
+    std::optional<BitDepth> bitDepth_;
+    std::optional<SampleRate> sampleRate_;
 
     std::shared_ptr<AudioTrackFormat> audioTrackFormat_;
     std::shared_ptr<AudioChannelFormat> audioChannelFormat_;

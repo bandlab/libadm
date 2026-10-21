@@ -1,7 +1,7 @@
 /// @file object_divergence.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include "adm/detail/named_type.hpp"
 #include "adm/detail/named_option_helper.hpp"
 #include "adm/export.h"
@@ -130,9 +130,9 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<AzimuthRange>::tag);
     ADM_EXPORT void unset(detail::ParameterTraits<PositionRange>::tag);
 
-    boost::optional<Divergence> divergence_;
-    boost::optional<AzimuthRange> azimuthRange_;
-    boost::optional<PositionRange> positionRange_;
+    std::optional<Divergence> divergence_;
+    std::optional<AzimuthRange> azimuthRange_;
+    std::optional<PositionRange> positionRange_;
 
     static const Divergence divergenceDefault_;
     static const AzimuthRange azimuthRangeDefault_;

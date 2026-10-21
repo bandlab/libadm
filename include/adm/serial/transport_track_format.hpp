@@ -1,7 +1,7 @@
 /// @file transport_track_format.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <memory>
 
 #include "adm/serial/transport_id.hpp"
