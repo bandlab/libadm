@@ -1,5 +1,4 @@
 #include "adm/elements/time.hpp"
-#include <cstdint>
 #include <numeric>
 #include <cmath>
 #include <iomanip>
@@ -16,7 +15,7 @@ namespace adm {
   }  // namespace detail
 
   FractionalTime FractionalTime::normalised() const {
-    int64_t gcd = boost::integer::gcd(numerator(), denominator());
+    const auto gcd = std::gcd(numerator(), denominator());
     return {numerator() / gcd, denominator() / gcd};
   }
 
