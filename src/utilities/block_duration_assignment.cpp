@@ -7,7 +7,6 @@
 #include <memory>
 #include <map>
 #include <stdexcept>
-#include <adm/utilities/time_conversion.hpp>
 
 namespace adm {
 
@@ -27,7 +26,7 @@ namespace adm {
     }
 
     // mixed, or different denominators
-    return asTime(asRational(firstTime) - asRational(secondTime));
+    return firstTime.asFractional() - secondTime.asFractional();
   }
 
   bool timesEqual(const Time& firstTime, const Time& secondTime) {

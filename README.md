@@ -22,9 +22,13 @@ This fork keeps the `adm` target and namespace, replacing Boost.Optional,
 Variant, Range and GCD with C++20 standard-library facilities. Const smart-pointer
 iteration uses `std::ranges::transform_view`. Hash combination and normalized
 rational-time subtraction have no direct C++20 standard-library equivalent and
-use small local implementations. `RationalTime` supports construction with a positive
-denominator, equality, subtraction and numerator/denominator access; it is not a
-general-purpose replacement for Boost.Rational. Consumers must rebuild because
+use small local implementations. Fractional subtraction is provided by
+`FractionalTime::operator-`, returning a normalized result.
+The former `adm/utilities/time_conversion.hpp` header and its
+`RationalTime`, `asRational`, `asFractionalTime` and `asTime` APIs have been removed;
+use `Time::asFractional()` and `FractionalTime::normalised()` for conversion and
+normalization. No general-purpose replacement for Boost.Rational is provided.
+Consumers must rebuild because
 public optional, variant and range types have changed. Use `std::ranges::equal`
 instead of comparing an element range directly with a container.
 Keep a const-element view alive while using its iterators; transform-view

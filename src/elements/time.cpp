@@ -1,5 +1,6 @@
 #include "adm/elements/time.hpp"
 #include <numeric>
+#include <limits>
 #include <cmath>
 #include <iomanip>
 #include <regex>
@@ -17,6 +18,28 @@ namespace adm {
   FractionalTime FractionalTime::normalised() const {
     const auto gcd = std::gcd(numerator(), denominator());
     return {numerator() / gcd, denominator() / gcd};
+  }
+
+  FractionalTime FractionalTime::operator-(const FractionalTime& other) const {
+    const auto a = normalised();
+    const auto b = other.normalised();
+    const auto divisor = std::gcd(a.denominator(), b.denominator());
+    const auto multiply = [](int64_t value, int64_t positive) {
+      if (value > std::numeric_limits<int64_t>::max() / positive ||
+          value < std::numeric_limits<int64_t>::min() / positive)
+        throw std::overflow_error("Fractional time multiplication overflow");
+      return value * positive;
+    };
+    const auto left = multiply(a.numerator(), b.denominator() / divisor);
+    const auto right = multiply(b.numerator(), a.denominator() / divisor);
+    if ((right > 0 && left < std::numeric_limits<int64_t>::min() + right) ||
+        (right < 0 && left > std::numeric_limits<int64_t>::max() + right))
+      throw std::overflow_error("Fractional time subtraction overflow");
+    const auto numerator = left - right;
+    const auto reduction = std::gcd(numerator, divisor);
+    return {numerator / reduction,
+            multiply(a.denominator() / divisor,
+                     b.denominator() / reduction)};
   }
 
   struct AsNanosecondsVisitor {

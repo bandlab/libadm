@@ -37,6 +37,9 @@ namespace adm {
     /// factors
     ADM_EXPORT FractionalTime normalised() const;
 
+    /// Returns a normalised difference; throws std::overflow_error on overflow.
+    ADM_EXPORT FractionalTime operator-(const FractionalTime& other) const;
+
    private:
     int64_t _numerator;
     int64_t _denominator;
