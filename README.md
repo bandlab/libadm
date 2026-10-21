@@ -57,6 +57,38 @@ closure conservatively:
 
 Verify by building against desktop, iOS and Android before committing.
 
+### Generic XML
+
+`adm/xml.hpp` exposes an owning `adm::xml::DomDocument` and non-owning `DomNode`
+handles. Node handles and returned string views require the document to remain
+alive; parsing again invalidates them after a successful parse.
+
+```cpp
+adm::xml::DomDocument xml;
+xml.parse(inputStream);
+auto custom = xml.root().findNode("audioFormatCustom");
+if (custom) {
+  auto preset = custom.firstNode("presetInformation");
+  if (!preset) preset = custom.addNode("presetInformation");
+  preset.setAttribute("name", "A & B");
+}
+auto output = xml.toString();
+```
+
+`firstNode` and `nextSibling` search immediate children and siblings; `findNode`
+searches descendants in document order. Names are matched literally, including
+namespace prefixes. Mutators allocate document-owned strings and serialization
+escapes text/attributes. `setValue` replaces a node's entire content.
+
+Generic XML, ADM and frame-header parsers validate closing tags and run the same
+non-recursive preflight before RapidXML allocates a DOM. XML nesting is limited
+to 128 elements, with a second depth guard inside RapidXML itself, and each
+`audioFormatCustom` subtree is limited to 4 MiB,
+including its tags. Comments, CDATA, processing instructions, quoted attributes
+and DTD declarations are skipped as constructs, not searched for closing tags.
+Limits are independent of stream chunk sizes. DTDs are not resolved or used to
+load external entities. Parse errors throw exceptions.
+
 ## Features
 
 - minimal dependencies

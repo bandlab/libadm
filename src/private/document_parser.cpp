@@ -3,6 +3,7 @@
 #include "adm/private/xml_parser_helper.hpp"
 #include "adm/detail/named_type_validators.hpp"
 #include "adm/errors.hpp"
+#include "adm/xml.hpp"
 namespace adm {
   namespace xml {
 
@@ -43,7 +44,8 @@ namespace adm {
 
     std::shared_ptr<Document> DocumentParser::parse() {
       rapidxml::xml_document<> xmlDocument;
-      xmlDocument.parse<0>(xmlFile_.data());
+      validateXml({xmlFile_.data(), xmlFile_.size() - 1});
+      xmlDocument.parse<rapidxml::parse_validate_closing_tags>(xmlFile_.data());
 
       if (!xmlDocument.first_node())
         throw error::XmlParsingError("xml document is empty");
