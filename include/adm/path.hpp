@@ -2,7 +2,7 @@
 
 #include "adm/elements_fwd.hpp"
 #include "adm/element_variant.hpp"
-#include <boost/functional/hash.hpp>
+#include <adm/detail/hash.hpp>
 #include <vector>
 #include <memory>
 #include <algorithm>
@@ -39,7 +39,7 @@ namespace adm {
     template <typename AdmId>
     void add(AdmId id) {
       elements_.push_back(id);
-      boost::hash_combine(hash_, formatId(id));
+      detail::hashCombine(hash_, formatId(id));
     }
 
     template <typename Element>
