@@ -1,3 +1,4 @@
+#include <cassert>
 #include <adm/utilities/block_duration_assignment.hpp>
 #include <adm/helper/get_optional_property.hpp>
 #include <adm/document.hpp>
@@ -6,7 +7,6 @@
 #include <memory>
 #include <map>
 #include <stdexcept>
-#include <adm/utilities/time_conversion.hpp>
 
 namespace adm {
 
@@ -26,7 +26,7 @@ namespace adm {
     }
 
     // mixed, or different denominators
-    return asTime(asRational(firstTime) - asRational(secondTime));
+    return firstTime.asFractional() - secondTime.asFractional();
   }
 
   bool timesEqual(const Time& firstTime, const Time& secondTime) {
@@ -35,20 +35,20 @@ namespace adm {
   }
 
   Time durationOfProgramme(const AudioProgramme* programme,
-                           boost::optional<Time> fileLength) {
+                           std::optional<Time> fileLength) {
     if (programme->has<End>()) {
       auto duration = subtractTimes(programme->get<End>().get(),
                                     programme->get<Start>().get());
       // if a file length is given AND a programme end is set, both durations
       // must match
-      if (fileLength && !timesEqual(fileLength.get(), duration)) {
+      if (fileLength && !timesEqual(fileLength.value(), duration)) {
         throw error::detail::formatElementRuntimeError(
             programme->get<AudioProgrammeId>(),
             "Programme length does not match specified filelength");
       }
       return duration;
     } else if (fileLength) {
-      return fileLength.get();
+      return fileLength.value();
     } else {
       throw error::detail::formatElementRuntimeError(
           programme->get<AudioProgrammeId>(),
@@ -146,7 +146,7 @@ namespace adm {
 
   std::map<AudioChannelFormatId, Time> calculateDurationOfChannels(
       std::shared_ptr<const AudioProgramme> programme,
-      boost::optional<Time> fileLength) {
+      std::optional<Time> fileLength) {
     auto programmeDuration = durationOfProgramme(programme.get(), fileLength);
     RouteTracer tracer;
     auto result = tracer.run(programme);
@@ -166,7 +166,7 @@ namespace adm {
   }
 
   void updateBlockFormatDurationsImpl(std::shared_ptr<Document> document,
-                                      boost::optional<Time> fileLength) {
+                                      std::optional<Time> fileLength) {
     std::map<AudioChannelFormatId, Time> durations;
     for (auto& programme : document->template getElements<AudioProgramme>()) {
       auto durationsOfProgramme =
@@ -200,7 +200,7 @@ namespace adm {
       throw error::AdmGenericRuntimeError(
           "No audio programme present, cannot guess length");
     }
-    updateBlockFormatDurationsImpl(document, boost::none);
+    updateBlockFormatDurationsImpl(document, std::nullopt);
   }
 
 }  // namespace adm

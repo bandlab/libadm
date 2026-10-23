@@ -29,21 +29,21 @@ namespace adm {
   }
   AudioProgrammeLanguage AudioProgramme::get(
       detail::ParameterTraits<AudioProgrammeLanguage>::tag) const {
-    return language_.get();
+    return language_.value();
   }
   Start AudioProgramme::get(detail::ParameterTraits<Start>::tag) const {
-    return boost::get_optional_value_or(start_, startDefault);
+    return start_.value_or(startDefault);
   }
   End AudioProgramme::get(detail::ParameterTraits<End>::tag) const {
-    return end_.get();
+    return end_.value();
   }
   MaxDuckingDepth AudioProgramme::get(
       detail::ParameterTraits<MaxDuckingDepth>::tag) const {
-    return maxDuckingDepth_.get();
+    return maxDuckingDepth_.value();
   }
   AudioProgrammeReferenceScreen AudioProgramme::get(
       detail::ParameterTraits<AudioProgrammeReferenceScreen>::tag) const {
-    return refScreen_.get();
+    return refScreen_.value();
   }
 
   // ---- Has ---- //
@@ -57,26 +57,26 @@ namespace adm {
   }
   bool AudioProgramme::has(
       detail::ParameterTraits<AudioProgrammeLanguage>::tag) const {
-    return language_ != boost::none;
+    return language_ != std::nullopt;
   }
   bool AudioProgramme::has(detail::ParameterTraits<Start>::tag) const {
     return true;
   }
   bool AudioProgramme::has(detail::ParameterTraits<End>::tag) const {
-    return end_ != boost::none;
+    return end_ != std::nullopt;
   }
   bool AudioProgramme::has(
       detail::ParameterTraits<MaxDuckingDepth>::tag) const {
-    return maxDuckingDepth_ != boost::none;
+    return maxDuckingDepth_ != std::nullopt;
   }
   bool AudioProgramme::has(
       detail::ParameterTraits<AudioProgrammeReferenceScreen>::tag) const {
-    return refScreen_ != boost::none;
+    return refScreen_ != std::nullopt;
   }
 
   // ---- isDefault ---- //
   bool AudioProgramme::isDefault(detail::ParameterTraits<Start>::tag) const {
-    return start_ == boost::none;
+    return start_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -105,20 +105,20 @@ namespace adm {
   // ---- Unsetter ---- //
   void AudioProgramme::unset(
       detail::ParameterTraits<AudioProgrammeLanguage>::tag) {
-    language_ = boost::none;
+    language_ = std::nullopt;
   }
   void AudioProgramme::unset(detail::ParameterTraits<Start>::tag) {
-    start_ = boost::none;
+    start_ = std::nullopt;
   }
   void AudioProgramme::unset(detail::ParameterTraits<End>::tag) {
-    end_ = boost::none;
+    end_ = std::nullopt;
   }
   void AudioProgramme::unset(detail::ParameterTraits<MaxDuckingDepth>::tag) {
-    maxDuckingDepth_ = boost::none;
+    maxDuckingDepth_ = std::nullopt;
   }
   void AudioProgramme::unset(
       detail::ParameterTraits<AudioProgrammeReferenceScreen>::tag) {
-    refScreen_ = boost::none;
+    refScreen_ = std::nullopt;
   }
 
   // ---- References ---- //

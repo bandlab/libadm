@@ -1,11 +1,11 @@
 #pragma once
 
 #include "adm/elements.hpp"
-#include <boost/variant.hpp>
+#include <variant>
 #include <memory>
 
 namespace adm {
-  using ElementVariant = boost::variant<
+  using ElementVariant = std::variant<
       std::shared_ptr<adm::AudioProgramme>, std::shared_ptr<adm::AudioContent>,
       std::shared_ptr<adm::AudioObject>, std::shared_ptr<adm::AudioPackFormat>,
       std::shared_ptr<adm::AudioChannelFormat>,
@@ -14,25 +14,25 @@ namespace adm {
       std::shared_ptr<adm::AudioTrackUid>>;
 
   using ElementConstVariant =
-      boost::variant<std::shared_ptr<const AudioProgramme>,
-                     std::shared_ptr<const AudioContent>,
-                     std::shared_ptr<const AudioObject>,
-                     std::shared_ptr<const AudioTrackUid>,
-                     std::shared_ptr<const AudioPackFormat>,
-                     std::shared_ptr<const AudioChannelFormat>,
-                     std::shared_ptr<const AudioStreamFormat>,
-                     std::shared_ptr<const AudioTrackFormat>>;
+      std::variant<std::shared_ptr<const AudioProgramme>,
+                   std::shared_ptr<const AudioContent>,
+                   std::shared_ptr<const AudioObject>,
+                   std::shared_ptr<const AudioTrackUid>,
+                   std::shared_ptr<const AudioPackFormat>,
+                   std::shared_ptr<const AudioChannelFormat>,
+                   std::shared_ptr<const AudioStreamFormat>,
+                   std::shared_ptr<const AudioTrackFormat>>;
 
   template <typename VariantType, typename Variant>
   struct IsVariantType {
     bool operator()(const Variant& v) const {
-      return v.type() == typeid(VariantType);
+      return std::holds_alternative<VariantType>(v);
     }
   };
 
   template <typename VariantType, typename Variant>
   bool isVariantType(const Variant& v) {
-    return v.type() == typeid(VariantType);
+    return std::holds_alternative<VariantType>(v);
   }
 
   template <typename Element>
@@ -40,7 +40,7 @@ namespace adm {
       const ElementVariant& variant,
       std::shared_ptr<Element> elseValue = nullptr) {
     if (isVariantType<std::shared_ptr<Element>>(variant)) {
-      return boost::get<std::shared_ptr<Element>>(variant);
+      return std::get<std::shared_ptr<Element>>(variant);
     } else {
       return elseValue;
     }
@@ -51,15 +51,15 @@ namespace adm {
       const ElementConstVariant& variant,
       std::shared_ptr<const Element> elseValue = nullptr) {
     if (isVariantType<std::shared_ptr<const Element>>(variant)) {
-      return boost::get<std::shared_ptr<const Element>>(variant);
+      return std::get<std::shared_ptr<const Element>>(variant);
     } else {
       return elseValue;
     }
   }
   using ElementIdVariant =
-      boost::variant<adm::AudioProgrammeId, adm::AudioContentId,
-                     adm::AudioObjectId, adm::AudioChannelFormatId,
-                     adm::AudioPackFormatId, adm::AudioTrackUidId,
-                     adm::AudioTrackFormatId, adm::AudioStreamFormatId>;
+      std::variant<adm::AudioProgrammeId, adm::AudioContentId,
+                   adm::AudioObjectId, adm::AudioChannelFormatId,
+                   adm::AudioPackFormatId, adm::AudioTrackUidId,
+                   adm::AudioTrackFormatId, adm::AudioStreamFormatId>;
 
 }  // namespace adm

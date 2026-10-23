@@ -24,7 +24,7 @@ namespace adm {
 
     FrameHeader FrameHeaderParser::parse() {
       rapidxml::xml_document<> document;
-      document.parse<0>(file.data());
+      document.parse<rapidxml::parse_validate_closing_tags>(file.data());
 
       if (!document.first_node())
         throw error::XmlParsingError("xml document is empty");

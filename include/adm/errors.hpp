@@ -1,6 +1,6 @@
 #pragma once
 #include <stdexcept>
-#include <boost/optional.hpp>
+#include <optional>
 #include <adm/elements/audio_object_id.hpp>
 #include <adm/elements/audio_channel_format_id.hpp>
 #include <adm/elements/audio_track_format_id.hpp>
@@ -48,19 +48,19 @@ namespace adm {
     class ADM_EXPORT XmlParsingError : public AdmException {
      public:
       explicit XmlParsingError(const std::string& message,
-                               boost::optional<int> line = boost::none);
+                               std::optional<int> line = std::nullopt);
       explicit XmlParsingError(int line);
 
      private:
       std::string formatMessage(const std::string& message,
-                                boost::optional<int> line) const;
+                                std::optional<int> line) const;
 
-      boost::optional<int> line_;
+      std::optional<int> line_;
     };
 
     class ADM_EXPORT XmlParsingDuplicateId : public XmlParsingError {
      public:
-      XmlParsingDuplicateId(const std::string& id, boost::optional<int> line);
+      XmlParsingDuplicateId(const std::string& id, std::optional<int> line);
 
      private:
       std::string formatMessage(const std::string& id);
@@ -78,7 +78,7 @@ namespace adm {
      public:
       XmlParsingUnexpectedAttrError(const std::string& attr,
                                     const std::string& value,
-                                    boost::optional<int> line = boost::none);
+                                    std::optional<int> line = std::nullopt);
 
      private:
       static std::string formatMessage(const std::string& attr,

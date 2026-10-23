@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_ENABLE_CHRONO_STRINGMAKER
 #include <catch2/catch.hpp>
+#include <limits>
 #include "adm/elements/time.hpp"
-#include "adm/utilities/time_conversion.hpp"
 #include "helper/ostream_operators.hpp"
 
 using namespace adm;
@@ -72,6 +72,31 @@ TEST_CASE("Time Fractional") {
   REQUIRE(t.asFractional().normalised() == FractionalTime{3, 2});
 }
 
+TEST_CASE("FractionalTime subtraction") {
+  REQUIRE(FractionalTime{1, 48000} - FractionalTime{1, 96000} ==
+          FractionalTime{1, 96000});
+  REQUIRE(FractionalTime{1, 3} - FractionalTime{1, 2} ==
+          FractionalTime{-1, 6});
+  REQUIRE(FractionalTime{6, 8} - FractionalTime{2, 8} ==
+          FractionalTime{1, 2});
+  REQUIRE(FractionalTime{1, 2} - FractionalTime{2, 4} ==
+          FractionalTime{0, 1});
+  REQUIRE(FractionalTime{1, 3} - FractionalTime{-1, 2} ==
+          FractionalTime{5, 6});
+  REQUIRE(FractionalTime{1, 6000000000} - FractionalTime{1, 4000000000} ==
+          FractionalTime{-1, 12000000000});
+}
+
+TEST_CASE("FractionalTime subtraction overflow") {
+  const auto maximum = std::numeric_limits<int64_t>::max();
+  REQUIRE_THROWS_AS((FractionalTime{maximum, 2} - FractionalTime{1, 3}),
+                    std::overflow_error);
+  REQUIRE_THROWS_AS((FractionalTime{1, 2} - FractionalTime{-maximum, 1}),
+                    std::overflow_error);
+  REQUIRE_THROWS_AS((FractionalTime{1, 2} - FractionalTime{1, maximum}),
+                    std::overflow_error);
+}
+
 TEST_CASE("Time nanoseconds") {
   Time t{std::chrono::nanoseconds{1500000000}};
 
@@ -102,17 +127,6 @@ TEST_CASE("Exceptions") {
                       Catch::Contains("denominator must be positive"));
   REQUIRE_THROWS_WITH(FractionalTime(0, -1),
                       Catch::Contains("denominator must be positive"));
-}
-
-TEST_CASE("rational conversion") {
-  REQUIRE(asRational(FractionalTime{4, 8}) == RationalTime{1, 2});
-
-  REQUIRE(asRational(std::chrono::nanoseconds{1000}) ==
-          RationalTime{1, 1000000});
-
-  REQUIRE(asFractionalTime(RationalTime{1, 2}) == FractionalTime{1, 2});
-
-  REQUIRE(asTime(RationalTime{1, 2}) == FractionalTime{1, 2});
 }
 
 TEST_CASE("Parsed negative zero time == zero time") {

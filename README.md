@@ -8,7 +8,7 @@
 
 ## Introduction
 
-The `libadm` library is a modern C++11 library to parse, modify, create and
+The `libadm` library is a C++20 library to parse, modify, create and
 write [`ITU-R BS.2076`](https://www.itu.int/rec/R-REC-BS.2076) conformant XML. It works well with the header-only
 library [`libbw64`](https://github.com/ebu/libbw64) to write ADM
 related applications with minimal dependencies.
@@ -16,46 +16,50 @@ related applications with minimal dependencies.
 [Read the documentation](https://libadm.readthedocs.io/en/latest/) to get
 started.
 
-## BandLab fork: vendored Boost
+## Boost-free C++20 BandLab fork
 
-This is BandLab's fork of `libadm`. Unlike upstream — which expects Boost header
-libraries to be available on the system — this fork **bundles** the minimal
-header-only Boost subset that `libadm` needs, in the [`boost/`](boost) directory,
-pinned to a known-good version (Boost 1.84). Consumers therefore need **no system
-Boost and no `find_package(Boost)`**: the CMake build provides the `Boost::boost`
-target from the bundled headers. This makes the library self-contained and
-reproducible across all targets, including cross-compilation.
+This fork keeps the `adm` target and namespace but requires C++20 and no Boost.
+Public `boost::optional`/`variant`/range types are now their `std` equivalents,
+so consumers must rebuild. `adm/utilities/time_conversion.hpp` is removed; use
+`Time::asFractional()`, `FractionalTime::normalised()` and
+`FractionalTime::operator-`. Const element ranges are `std::ranges` views:
+compare them with `std::ranges::equal`, and keep the view alive while using its
+iterators.
 
-Pinning the Boost version matters here. A newer Boost is not necessarily safe —
-for example, Boost 1.90 crashes the Android NDK clang while compiling `libadm`,
-whereas the vendored 1.84 builds cleanly on desktop, iOS and Android.
+### Generic XML
 
-### Regenerating the Boost subset
+`DomNode::childElement()`, `nextSiblingElement()` and `attributeValue()` match local names, ignoring
+prefixes without resolving namespace URIs. The first matching element or
+attribute wins. Existing `firstNode()` and `attribute()` match qualified names
+exactly.
 
-The committed `boost/` directory is ready to use; you only need to regenerate it
-when bumping the Boost version or when a `libadm` change pulls in a new Boost
-header. Boost's macro / computed / compiler-conditional includes make a precise
-per-header trace unreliable (it silently misses headers under different compile
-flags), so use Boost's own `bcp` tool, which copies each used library plus its
-closure conservatively:
+`adm/xml.hpp` exposes an owning `adm::xml::DomDocument` and non-owning `DomNode`
+handles. Node handles and returned string views require the document to remain
+alive; parsing again invalidates them after a successful parse.
+`adm::parseXml(dom, options)` builds an ADM model from an already parsed
+`DomDocument` without parsing XML again or consuming its custom nodes. The
+returned ADM model owns its data independently of the DOM.
 
-```sh
-# 1. Build bcp from a Boost release (e.g. boost_1_84_0):
-./bootstrap.sh && ./b2 tools/bcp
-
-# 2. Extract the libraries libadm includes (grep `boost/` in include/ + src/) into boost/:
-./dist/bin/bcp --boost=<boost-src> \
-    variant optional rational format \
-    boost/functional/hash.hpp boost/integer/common_factor.hpp \
-    boost/iterator/iterator_adaptor.hpp boost/range/iterator_range_core.hpp \
-    boost/version.hpp \
-    <this-repo>/boost
-
-# 3. Keep only headers (bcp also copies sources/tests/docs):
-( cd <this-repo>/boost && rm -rf libs doc tools more status )
+```cpp
+adm::xml::DomDocument xml;
+xml.parse(inputStream);
+auto custom = xml.root().findNode("audioFormatCustom");
+if (custom) {
+  auto preset = custom.firstNode("presetInformation");
+  if (!preset) preset = custom.addNode("presetInformation");
+  preset.setAttribute("name", "A & B");
+}
+auto output = xml.toString();
 ```
 
-Verify by building against desktop, iOS and Android before committing.
+`firstNode` and `nextSibling` search immediate children and siblings; `findNode`
+searches descendants in document order. Names are matched literally, including
+namespace prefixes. Mutators allocate document-owned strings and serialization
+escapes text/attributes. `setValue` replaces a node's entire content.
+
+Generic XML, ADM and frame-header parsers validate closing tags. RapidXML
+rejects nesting deeper than 128 elements instead of recursing further. DTDs are
+not resolved or used to load external entities. Parse errors throw exceptions.
 
 ## Features
 
@@ -66,15 +70,9 @@ Verify by building against desktop, iOS and Android before committing.
 
 ## Dependencies
 
-- compiler with C++11 support
-- Boost header libraries (version 1.57 or later)
-  - Boost.Optional
-  - Boost.Variant
-  - Boost.Range
-  - Boost.Iterator
-  - Boost.Functional
-  - Boost.Format
-- CMake build system (version 3.5 or later)
+- compiler and standard library with C++20 support
+- bundled RapidXML headers
+- CMake build system (version 3.16 or later)
 
 ## Installation
 

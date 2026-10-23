@@ -1,7 +1,7 @@
 /// @file audio_object.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <memory>
 #include "adm/elements/time.hpp"
 #include "adm/elements/audio_object_id.hpp"
@@ -363,13 +363,13 @@ namespace adm {
     std::vector<std::shared_ptr<AudioObject>> audioComplementaryObjects_;
     std::vector<std::shared_ptr<AudioPackFormat>> audioPackFormats_;
     std::vector<std::shared_ptr<AudioTrackUid>> audioTrackUids_;
-    boost::optional<Start> start_;
-    boost::optional<Duration> duration_;
-    boost::optional<DialogueId> dialogueId_;
-    boost::optional<Importance> importance_;
-    boost::optional<Interact> interact_;
-    boost::optional<DisableDucking> disableDucking_;
-    boost::optional<AudioObjectInteraction> audioObjectInteraction_;
+    std::optional<Start> start_;
+    std::optional<Duration> duration_;
+    std::optional<DialogueId> dialogueId_;
+    std::optional<Importance> importance_;
+    std::optional<Interact> interact_;
+    std::optional<DisableDucking> disableDucking_;
+    std::optional<AudioObjectInteraction> audioObjectInteraction_;
   };
 
   // ---- Implementation ---- //

@@ -1,8 +1,8 @@
 /// @file position.hpp
 #pragma once
 
-#include <boost/optional.hpp>
-#include <boost/variant.hpp>
+#include <optional>
+#include <variant>
 #include <cmath>
 #include <iosfwd>
 #include "adm/elements/position_types.hpp"
@@ -113,8 +113,8 @@ namespace adm {
 
     Azimuth azimuth_;
     Elevation elevation_;
-    boost::optional<Distance> distance_;
-    boost::optional<ScreenEdgeLock> screenEdgeLock_;
+    std::optional<Distance> distance_;
+    std::optional<ScreenEdgeLock> screenEdgeLock_;
 
     static const Distance distanceDefault_;
   };
@@ -213,14 +213,14 @@ namespace adm {
 
     X x_;
     Y y_;
-    boost::optional<Z> z_;
-    boost::optional<ScreenEdgeLock> screenEdgeLock_;
+    std::optional<Z> z_;
+    std::optional<ScreenEdgeLock> screenEdgeLock_;
 
     static const Z zDefault_;
   };
 
   ///@brief Type to hold a SphericalPosition or CartesianPosition
-  typedef boost::variant<SphericalPosition, CartesianPosition> Position;
+  typedef std::variant<SphericalPosition, CartesianPosition> Position;
   ADD_TRAIT(Position, PositionTag);
 
   // ---- Free functions ---- //

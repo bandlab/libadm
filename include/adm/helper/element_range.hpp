@@ -1,114 +1,74 @@
 #pragma once
 
 #include <algorithm>
+#include <iterator>
 #include <memory>
+#include <ranges>
 #include <vector>
-#include <boost/range/iterator_range_core.hpp>
-#include <boost/iterator/iterator_adaptor.hpp>
 
 namespace adm {
 
   namespace detail {
 
     /**
-     * Simple wrapper around an iterator to convert
-     * `std::shared_ptr<Element>` to `std::shared_ptr<const Element>`.
-     *
-     * While this conversion is directly supported by `std::shared_ptr`, we
-     * cannot use this automatically with iterators and containers. From a
-     * container's point of view, `std::shared_ptr<Element>` and
-     * `std::shared_ptr<const Element>` are two completly different types.
-     *
-     * Thus, we have this adaptor (which simply uses `boost::iterator_adaptor`
-     * with the correct template arguments) to do the conversion for us.
+     * Converts shared or weak pointers to pointers to const elements.
      * @headerfile element_range.hpp <adm/helpers/element_range.hpp>
      */
-    template <typename Iterator, typename Element>
-    struct ConstSharedPtrIteratorAdaptor
-        : boost::iterator_adaptor<
-              ConstSharedPtrIteratorAdaptor<Iterator, Element>, Iterator,
-              std::shared_ptr<const Element>, boost::use_default,
-              const std::shared_ptr<const Element>> {
-      typedef boost::iterator_adaptor<
-          ConstSharedPtrIteratorAdaptor<Iterator, Element>, Iterator,
-          std::shared_ptr<const Element>, boost::use_default,
-          const std::shared_ptr<const Element>>
-          Base;
-
-      ConstSharedPtrIteratorAdaptor() : Base() {}
-      explicit ConstSharedPtrIteratorAdaptor(Iterator it) : Base(it) {}
-    };
-
-    template <typename Iterator, typename Element>
-    struct ConstWeakPtrIteratorAdaptor
-        : boost::iterator_adaptor<
-              ConstWeakPtrIteratorAdaptor<Iterator, Element>, Iterator,
-              std::weak_ptr<const Element>, boost::use_default,
-              const std::weak_ptr<const Element>> {
-      typedef boost::iterator_adaptor<
-          ConstWeakPtrIteratorAdaptor<Iterator, Element>, Iterator,
-          std::weak_ptr<const Element>, boost::use_default,
-          const std::weak_ptr<const Element>>
-          Base;
-
-      ConstWeakPtrIteratorAdaptor() : Base() {}
-      explicit ConstWeakPtrIteratorAdaptor(Iterator it) : Base(it) {}
+    template <typename Pointer>
+    struct ConstPointer {
+      const Pointer operator()(const auto& pointer) const { return pointer; }
     };
 
     /**
-     * Helper template to get the iterator_range type for
+     * Helper template to get the range type for
      * `std::shared_ptr<Element>` in an `std::vector`.
      * @sa struct ElementRangeImpl<const Element>
      * @headerfile element_range.hpp <adm/helpers/element_range.hpp>
      */
     template <typename Element>
     struct ElementRangeImpl {
-      using type = typename boost::iterator_range<
+      using type = std::ranges::subrange<
           typename std::vector<std::shared_ptr<Element>>::const_iterator>;
     };
 
     /**
-     * Specialization of the helper template to get the iterator_range type
+     * Specialization of the helper template to get the range type
      * for `std::shared_ptr<const Element>` in a `std::vector`.
      *
-     * The main trick here is that we use `ConstSharedPtrIteratorAdaptor` to
-     * get iterators to `std::shared_ptr<const Element>`  from a
-     * `std::vector` containing `std::shared_ptr<Element>`.
+     * A transform view converts pointers to const elements on dereference.
      * @headerfile element_range.hpp <adm/helpers/element_range.hpp>
      */
     template <typename Element>
     struct ElementRangeImpl<const Element> {
-      using type = typename boost::iterator_range<ConstSharedPtrIteratorAdaptor<
-          typename std::vector<std::shared_ptr<Element>>::const_iterator,
-          Element>>;
+      using type = std::ranges::transform_view<
+          typename ElementRangeImpl<Element>::type,
+          ConstPointer<std::shared_ptr<const Element>>>;
     };
 
     /**
-     * Helper template to get the iterator_range type for
+     * Helper template to get the range type for
      * `std::weak_ptr<Element>` in an `std::vector`.
      * @sa struct ElementRangeImpl<const Element>
      * @headerfile element_range.hpp <adm/helpers/element_range.hpp>
      */
     template <typename Element>
     struct ElementRangeWeakImpl {
-      using type = typename boost::iterator_range<
+      using type = std::ranges::subrange<
           typename std::vector<std::weak_ptr<Element>>::const_iterator>;
     };
 
     /**
-     * Specialization of the helper template to get the iterator_range type
+     * Specialization of the helper template to get the range type
      * for `std::weak_ptr<const Element>` in a `std::vector`.
      *
-     * The main trick here is that we use `ConstSharedPtrIteratorAdaptor` to
-     * get iterators to `std::weak_ptr<const Element>`  from a
-     * `std::vector` containing `std::weak_ptr<Element>`.
+     * A transform view converts pointers to const elements on dereference.
      * @headerfile element_range.hpp <adm/helpers/element_range.hpp>
      */
     template <typename Element>
     struct ElementRangeWeakImpl<const Element> {
-      using type = typename boost::iterator_range<ConstWeakPtrIteratorAdaptor<
-          typename std::vector<std::weak_ptr<Element>>::const_iterator,
-          Element>>;
+      using type = std::ranges::transform_view<
+          typename ElementRangeWeakImpl<Element>::type,
+          ConstPointer<std::weak_ptr<const Element>>>;
     };
 
   }  // namespace detail
@@ -128,7 +88,8 @@ namespace adm {
    * its supporting classes, as this allows as to return a  range of "real"
    * `const` elements.
    *
-   * The range itself is simply implemented by using `boost::iterator_range`.
+   * The range uses `std::ranges::subrange`, with a `std::ranges::transform_view`
+   * for const elements.
    *
    * One make use the convenience `detail::makeElementRange()` function to
    * quickly create a range from an container.
@@ -158,6 +119,9 @@ namespace adm {
    * The rationale for this is that it's not allowed to change the range
    * itself via its iterators, because there are member functions of the
    * parent elements to achieve this and ensure internal invariants to hold.
+   *
+   * Iterators for const elements must not outlive the range view. This also
+   * applies to ElementWeakRange<const Element>.
    */
   template <typename Element>
   using ElementRange = typename detail::ElementRangeImpl<Element>::type;
@@ -174,10 +138,8 @@ namespace adm {
      */
     template <typename Element, typename Container>
     ElementRange<const Element> makeElementRange(const Container &container) {
-      typedef typename Container::const_iterator const_iterator;
-      typedef ConstSharedPtrIteratorAdaptor<const_iterator, Element> Adaptor;
-      return boost::make_iterator_range(Adaptor(container.cbegin()),
-                                        Adaptor(container.cend()));
+      return {std::ranges::subrange(container.cbegin(), container.cend()),
+              ConstPointer<std::shared_ptr<const Element>>{}};
     }
 
     /**
@@ -187,7 +149,7 @@ namespace adm {
      */
     template <typename Element, typename Container>
     ElementRange<Element> makeElementRange(Container &container) {
-      return boost::make_iterator_range(container.cbegin(), container.cend());
+      return {container.cbegin(), container.cend()};
     }
 
     template <typename Element, typename Container>

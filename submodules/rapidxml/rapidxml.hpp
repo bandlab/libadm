@@ -1357,6 +1357,7 @@ namespace rapidxml
     template<class Ch = char>
     class xml_document: public xml_node<Ch>, public memory_pool<Ch>
     {
+        std::size_t m_parse_depth = 0;
     
     public:
 
@@ -1381,6 +1382,7 @@ namespace rapidxml
         void parse(Ch *text)
         {
             assert(text);
+            m_parse_depth = 0;
             
             // Remove current contents
             this->remove_all_nodes();
@@ -2036,6 +2038,15 @@ namespace rapidxml
         template<int Flags>
         xml_node<Ch> *parse_element(Ch *&text)
         {
+            if (m_parse_depth >= 128)
+                RAPIDXML_PARSE_ERROR("maximum XML nesting depth exceeded", text);
+            ++m_parse_depth;
+            struct depth_guard
+            {
+                std::size_t &depth;
+                ~depth_guard() { --depth; }
+            } guard = {m_parse_depth};
+
             // Create element node
             xml_node<Ch> *element = this->allocate_node(node_element);
 

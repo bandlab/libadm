@@ -16,15 +16,15 @@ namespace adm {
   // ---- Getter ---- //
   TypeDescriptor AudioBlockFormatId::get(
       detail::ParameterTraits<TypeDescriptor>::tag) const {
-    return boost::get_optional_value_or(channelType_, channelTypeDefault_);
+    return channelType_.value_or(channelTypeDefault_);
   }
   AudioBlockFormatIdValue AudioBlockFormatId::get(
       detail::ParameterTraits<AudioBlockFormatIdValue>::tag) const {
-    return boost::get_optional_value_or(value_, valueDefault_);
+    return value_.value_or(valueDefault_);
   }
   AudioBlockFormatIdCounter AudioBlockFormatId::get(
       detail::ParameterTraits<AudioBlockFormatIdCounter>::tag) const {
-    return boost::get_optional_value_or(counter_, counterDefault_);
+    return counter_.value_or(counterDefault_);
   }
 
   // ---- Has ---- //
@@ -44,15 +44,15 @@ namespace adm {
   // ---- isDefault ---- //
   bool AudioBlockFormatId::isDefault(
       detail::ParameterTraits<TypeDescriptor>::tag) const {
-    return channelType_ == boost::none;
+    return channelType_ == std::nullopt;
   }
   bool AudioBlockFormatId::isDefault(
       detail::ParameterTraits<AudioBlockFormatIdValue>::tag) const {
-    return value_ == boost::none;
+    return value_ == std::nullopt;
   }
   bool AudioBlockFormatId::isDefault(
       detail::ParameterTraits<AudioBlockFormatIdCounter>::tag) const {
-    return counter_ == boost::none;
+    return counter_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -68,15 +68,15 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void AudioBlockFormatId::unset(detail::ParameterTraits<TypeDescriptor>::tag) {
-    channelType_ = boost::none;
+    channelType_ = std::nullopt;
   }
   void AudioBlockFormatId::unset(
       detail::ParameterTraits<AudioBlockFormatIdValue>::tag) {
-    value_ = boost::none;
+    value_ = std::nullopt;
   }
   void AudioBlockFormatId::unset(
       detail::ParameterTraits<AudioBlockFormatIdCounter>::tag) {
-    counter_ = boost::none;
+    counter_ = std::nullopt;
   }
 
   // ---- Operators ---- //

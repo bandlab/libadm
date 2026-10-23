@@ -2,7 +2,7 @@
 
 namespace adm {
 
-  struct AddElementVisitor : public boost::static_visitor<> {
+  struct AddElementVisitor {
     explicit AddElementVisitor(Path* path) : path_(path) {}
 
     template <typename T>
@@ -14,7 +14,7 @@ namespace adm {
     Path* path_;
   };
 
-  struct AddIdVisitor : public boost::static_visitor<> {
+  struct AddIdVisitor {
     explicit AddIdVisitor(Path* path) : path_(path) {}
 
     template <typename T>
@@ -27,11 +27,11 @@ namespace adm {
   };
 
   void Path::add(ElementConstVariant elementVariant) {
-    boost::apply_visitor(AddElementVisitor(this), elementVariant);
+    std::visit(AddElementVisitor(this), elementVariant);
   }
 
   void Path::add(ElementIdVariant elementIdVariant) {
-    boost::apply_visitor(AddIdVisitor(this), elementIdVariant);
+    std::visit(AddIdVisitor(this), elementIdVariant);
   }
 
 }  // namespace adm
