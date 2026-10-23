@@ -166,7 +166,7 @@ behave in different ways:
 .. cpp:class:: template<typename ParameterT> adm::VariantParameter
 
    Variant parameters have a single value, but that value can be one of two or
-   more types, stored in a `boost::variant`.
+   more types, stored in a `std::variant`.
 
    This is used for types where there is no obvious conversion between the
    possible types. For types that just have multiple representations of the

@@ -3,7 +3,6 @@
 #include "adm/private/xml_parser_helper.hpp"
 #include "adm/detail/named_type_validators.hpp"
 #include "adm/errors.hpp"
-#include "adm/xml.hpp"
 namespace adm {
   namespace xml {
 
@@ -42,24 +41,35 @@ namespace adm {
       idMap_.add(std::move(el));
     }
 
-    std::shared_ptr<Document> DocumentParser::parse() {
-      rapidxml::xml_document<> xmlDocument;
-      validateXml({xmlFile_.data(), xmlFile_.size() - 1});
-      xmlDocument.parse<rapidxml::parse_validate_closing_tags>(xmlFile_.data());
+    DocumentParser::DocumentParser(DomNode root, ParserOptions options,
+                                   std::shared_ptr<Document> destDocument)
+        : parsedRoot_(root.node_),
+          options_(options),
+          document_(destDocument),
+          idMap_(*destDocument) {}
 
-      if (!xmlDocument.first_node())
-        throw error::XmlParsingError("xml document is empty");
+    std::shared_ptr<Document> DocumentParser::parse() {
+      if (parsedRoot_) return parse(parsedRoot_->first_node());
+      rapidxml::xml_document<> xmlDocument;
+      xmlDocument.parse<rapidxml::parse_validate_closing_tags>(
+          xmlFile_->data());
+      return parse(xmlDocument.first_node());
+    }
+
+    std::shared_ptr<Document> DocumentParser::parse(NodePtr firstNode) {
+      while (firstNode && firstNode->type() != rapidxml::node_element)
+        firstNode = firstNode->next_sibling();
+      if (!firstNode) throw error::XmlParsingError("xml document is empty");
 
       NodePtr root = nullptr;
 
-      root = findFrameAudioFormatExtended(xmlDocument.first_node());
+      root = findFrameAudioFormatExtended(firstNode);
 
       if (!root) {
         if (isSet(options_, ParserOptions::recursive_node_search)) {
-          root = findAudioFormatExtendedNodeFullRecursive(
-              xmlDocument.first_node());
+          root = findAudioFormatExtendedNodeFullRecursive(firstNode);
         } else {
-          root = findAudioFormatExtendedNodeEbuCore(xmlDocument.first_node());
+          root = findAudioFormatExtendedNodeEbuCore(firstNode);
         }
       }
 

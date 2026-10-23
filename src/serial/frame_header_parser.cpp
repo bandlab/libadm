@@ -1,7 +1,6 @@
 #include "adm/serial/frame_header_parser.hpp"
 #include "adm/private/xml_parser_helper.hpp"
 #include "adm/errors.hpp"
-#include "adm/xml.hpp"
 #include "adm/private/rapidxml_utils.hpp"
 #include "rapidxml/rapidxml.hpp"
 #include "rapidxml/rapidxml_utils.hpp"
@@ -25,7 +24,6 @@ namespace adm {
 
     FrameHeader FrameHeaderParser::parse() {
       rapidxml::xml_document<> document;
-      validateXml({file.data(), file.size() - 1});
       document.parse<rapidxml::parse_validate_closing_tags>(file.data());
 
       if (!document.first_node())

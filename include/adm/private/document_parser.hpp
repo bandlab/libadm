@@ -8,6 +8,7 @@
 #include "adm/elements.hpp"
 #include "adm/errors.hpp"
 #include "adm/parse.hpp"
+#include "adm/xml.hpp"
 #include "rapidxml/rapidxml.hpp"
 #include "rapidxml/rapidxml_utils.hpp"
 #include "adm/elements/audio_pack_format_hoa.hpp"
@@ -86,6 +87,8 @@ namespace adm {
           std::shared_ptr<Document> destDocument = Document::create());
 
       void setHeader(FrameHeader header);
+      explicit DocumentParser(DomNode root, ParserOptions options,
+                              std::shared_ptr<Document> destDocument);
       std::shared_ptr<Document> parse();
 
       bool hasUnresolvedReferences();
@@ -106,7 +109,9 @@ namespace adm {
       std::shared_ptr<AudioTrackUid> parseAudioTrackUid(NodePtr node);
       std::shared_ptr<AudioChannelFormat> parseAudioChannelFormat(NodePtr node);
 
-      rapidxml::file<> xmlFile_;
+      std::optional<rapidxml::file<>> xmlFile_;
+      NodePtr parsedRoot_ = nullptr;
+      std::shared_ptr<Document> parse(NodePtr firstNode);
       ParserOptions options_;
       std::shared_ptr<Document> document_;
       std::optional<FrameHeader> frameHeader_;

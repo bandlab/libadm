@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstddef>
 #include <iosfwd>
 #include <memory>
 #include <optional>
@@ -14,13 +13,8 @@ namespace rapidxml {
 }
 
 namespace adm::xml {
-  inline constexpr std::size_t maxXmlDepth = 128;
-  inline constexpr std::size_t maxCustomElementBytes = 4 * 1024 * 1024;
-
-  /// Non-recursive checks applied before every RapidXML parse.
-  ADM_EXPORT void validateXml(std::string_view text);
-
   class DomDocument;
+  class DocumentParser;
 
   /// Non-owning handle; the document must outlive its nodes and string views.
   class ADM_EXPORT DomNode {
@@ -31,6 +25,11 @@ namespace adm::xml {
     std::string_view value() const;
     std::optional<std::string_view> attribute(std::string_view name) const;
     DomNode firstNode(std::string_view name = {}) const;
+    /// Match element/attribute local names without resolving namespace URIs.
+    DomNode childElement(std::string_view localName) const;
+    DomNode nextSiblingElement(std::string_view localName) const;
+    std::optional<std::string_view> attributeValue(
+        std::string_view localName) const;
     DomNode nextSibling(std::string_view name = {}) const;
     DomNode findNode(std::string_view name) const;
     DomNode addNode(std::string_view name);
@@ -39,6 +38,7 @@ namespace adm::xml {
 
    private:
     friend class DomDocument;
+    friend class DocumentParser;
     explicit DomNode(rapidxml::xml_node<char>* node) : node_(node) {}
     rapidxml::xml_node<char>* node_ = nullptr;
   };
