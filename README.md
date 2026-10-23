@@ -18,30 +18,27 @@ started.
 
 ## Boost-free C++20 BandLab fork
 
-This fork keeps the `adm` target and namespace, replacing Boost.Optional,
-Variant, Range and GCD with C++20 standard-library facilities. Const smart-pointer
-iteration uses `std::ranges::transform_view`. Hash combination and normalized
-rational-time subtraction have no direct C++20 standard-library equivalent and
-use small local implementations. Fractional subtraction is provided by
-`FractionalTime::operator-`, returning a normalized result.
-The former `adm/utilities/time_conversion.hpp` header and its
-`RationalTime`, `asRational`, `asFractionalTime` and `asTime` APIs have been removed;
-use `Time::asFractional()` and `FractionalTime::normalised()` for conversion and
-normalization. No general-purpose replacement for Boost.Rational is provided.
-Consumers must rebuild because
-public optional, variant and range types have changed. Use `std::ranges::equal`
-instead of comparing an element range directly with a container.
-Keep a const-element view alive while using its iterators; transform-view
-iterators depend on the view as well as the underlying container.
-
-The inherited `boost/` tree is unused: neither compilation, installation nor
-the exported CMake package depends on it.
+This fork keeps the `adm` target and namespace but requires C++20 and no Boost.
+Public `boost::optional`/`variant`/range types are now their `std` equivalents,
+so consumers must rebuild. `adm/utilities/time_conversion.hpp` is removed; use
+`Time::asFractional()`, `FractionalTime::normalised()` and
+`FractionalTime::operator-`. Const element ranges are `std::ranges` views:
+compare them with `std::ranges::equal`, and keep the view alive while using its
+iterators.
 
 ### Generic XML
+
+`DomNode::childElement()`, `nextSiblingElement()` and `attributeValue()` match local names, ignoring
+prefixes without resolving namespace URIs. The first matching element or
+attribute wins. Existing `firstNode()` and `attribute()` match qualified names
+exactly.
 
 `adm/xml.hpp` exposes an owning `adm::xml::DomDocument` and non-owning `DomNode`
 handles. Node handles and returned string views require the document to remain
 alive; parsing again invalidates them after a successful parse.
+`adm::parseXml(dom, options)` builds an ADM model from an already parsed
+`DomDocument` without parsing XML again or consuming its custom nodes. The
+returned ADM model owns its data independently of the DOM.
 
 ```cpp
 adm::xml::DomDocument xml;
@@ -60,14 +57,9 @@ searches descendants in document order. Names are matched literally, including
 namespace prefixes. Mutators allocate document-owned strings and serialization
 escapes text/attributes. `setValue` replaces a node's entire content.
 
-Generic XML, ADM and frame-header parsers validate closing tags and run the same
-non-recursive preflight before RapidXML allocates a DOM. XML nesting is limited
-to 128 elements, with a second depth guard inside RapidXML itself, and each
-`audioFormatCustom` subtree is limited to 4 MiB,
-including its tags. Comments, CDATA, processing instructions, quoted attributes
-and DTD declarations are skipped as constructs, not searched for closing tags.
-Limits are independent of stream chunk sizes. DTDs are not resolved or used to
-load external entities. Parse errors throw exceptions.
+Generic XML, ADM and frame-header parsers validate closing tags. RapidXML
+rejects nesting deeper than 128 elements instead of recursing further. DTDs are
+not resolved or used to load external entities. Parse errors throw exceptions.
 
 ## Features
 
