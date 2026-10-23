@@ -21,13 +21,6 @@ jobs:
         shared: [true, false]
         build_type: [Release]
         include:
-          - os: windows-latest
-            triplet: x64-windows
-          - os: macos-latest
-            triplet: x64-osx
-          - os: ubuntu-latest
-            triplet: x64-linux
-
           - os: ubuntu-latest
             shared: true
             build_type: Coverage
