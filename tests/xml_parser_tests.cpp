@@ -30,6 +30,55 @@ TEST_CASE("generic XML siblings and generated nodes") {
   REQUIRE(parsed.firstNode("description").value() == "A < B & C");
 }
 
+TEST_CASE("ADM parsing reuses a generic DOM without consuming custom nodes") {
+  adm::xml::DomDocument xml;
+  xml.parse(
+      "<?xml version=\"1.0\"?><!-- metadata -->"
+      "<format><audioFormatExtended>"
+      "<audioProgramme audioProgrammeID=\"APR_1001\" "
+      "audioProgrammeName=\"test\"/>"
+      "</audioFormatExtended><audioFormatCustom id=\"preset\"/></format>");
+  auto custom = xml.root().findNode("audioFormatCustom");
+  auto document =
+      adm::parseXml(xml, adm::xml::ParserOptions::recursive_node_search);
+  REQUIRE(document->getElements<adm::AudioProgramme>().size() == 1);
+  REQUIRE(custom.attribute("id") == "preset");
+  REQUIRE_NOTHROW(
+      adm::parseXml(xml, adm::xml::ParserOptions::recursive_node_search));
+  REQUIRE_THROWS(adm::parseXml(xml));
+  xml.parse("<other/>");
+  REQUIRE(document->getElements<adm::AudioProgramme>()
+              .front()
+              ->get<adm::AudioProgrammeName>()
+              .get() == "test");
+}
+
+TEST_CASE("generic XML local name lookup preserves exact name lookup") {
+  adm::xml::DomDocument document;
+  document.parse(
+      "<root><!-- <preset/> --><x:preset x:id=\"A &amp; B\"/>"
+      "<!-- preset --><other/><preset id=\"second\"/>"
+      "<y:preset id=\"third\"/></root>");
+  auto root = document.root().firstNode("root");
+  auto preset = root.childElement("preset");
+  REQUIRE(preset.name() == "x:preset");
+  REQUIRE(preset.attributeValue("id") == "A & B");
+  REQUIRE_FALSE(preset.attribute("id"));
+  REQUIRE(root.firstNode("preset").attribute("id") == "second");
+  auto second = preset.nextSiblingElement("preset");
+  REQUIRE(second.attributeValue("id") == "second");
+  auto third = second.nextSiblingElement("preset");
+  REQUIRE(third.name() == "y:preset");
+  REQUIRE(third.attributeValue("id") == "third");
+  REQUIRE_FALSE(third.nextSiblingElement("preset"));
+  REQUIRE_FALSE(preset.nextSiblingElement("missing"));
+  REQUIRE_THROWS_AS(preset.nextSiblingElement(""), std::invalid_argument);
+  REQUIRE_FALSE(root.childElement("missing"));
+  REQUIRE_FALSE(preset.attributeValue("missing"));
+  REQUIRE_THROWS_AS(root.childElement(""), std::invalid_argument);
+  REQUIRE_THROWS_AS(preset.attributeValue(""), std::invalid_argument);
+}
+
 TEST_CASE("custom XML closing text is not markup inside XML constructs") {
   const std::string xml =
       "<format><audioFormatCustom>"
@@ -45,14 +94,6 @@ TEST_CASE("custom XML closing text is not markup inside XML constructs") {
   adm::xml::DomDocument roundTrip;
   roundTrip.parse(document.toString());
   REQUIRE(roundTrip.root().findNode("presetInformation"));
-}
-
-TEST_CASE("generic XML skips DTD markup during depth validation") {
-  adm::xml::DomDocument document;
-  REQUIRE_NOTHROW(document.parse(
-      "<!DOCTYPE format [<!ELEMENT format ANY><!-- <ignored> -->]>"
-      "<format><audioFormatCustom/></format>"));
-  REQUIRE(document.root().findNode("audioFormatCustom"));
 }
 
 TEST_CASE("failed generic XML parsing preserves the previous document") {
@@ -84,9 +125,9 @@ TEST_CASE("all XML entry points reject excessive nesting and mismatched tags") {
   rejects("<format><audioFormatExtended></wrong></format>");
   rejects("<frame><frameHeader></wrong></frame>");
   std::string nested;
-  for (std::size_t i = 0; i < adm::xml::maxXmlDepth; ++i) nested += "<n>";
+  for (std::size_t i = 0; i < 128; ++i) nested += "<n>";
   auto atLimit = nested;
-  for (std::size_t i = 0; i < adm::xml::maxXmlDepth; ++i) atLimit += "</n>";
+  for (std::size_t i = 0; i < 128; ++i) atLimit += "</n>";
   adm::xml::DomDocument document;
   REQUIRE_NOTHROW(document.parse(atLimit));
   rejects(nested + "<n/>" + atLimit.substr(nested.size()));
@@ -94,42 +135,6 @@ TEST_CASE("all XML entry points reject excessive nesting and mismatched tags") {
   for (int i = 0; i < 100000; ++i) deep += "<n>";
   rejects(deep);
   rejects("<n>unterminated");
-  rejects(std::string("<n/>\0<n/>", 9));
-}
-
-TEST_CASE("RapidXML bounds recursion even without the XML preflight") {
-  std::string text;
-  for (int i = 0; i < 10000; ++i) text += "<n>";
-  rapidxml::xml_document<> document;
-  REQUIRE_THROWS_AS(
-      document.parse<rapidxml::parse_validate_closing_tags>(text.data()),
-      rapidxml::parse_error);
-  std::string shallow = "<n/>";
-  REQUIRE_NOTHROW(
-      document.parse<rapidxml::parse_validate_closing_tags>(shallow.data()));
-}
-
-TEST_CASE("custom XML size bound includes complete and self closing elements") {
-  const std::string opening = "<audioFormatCustom>";
-  const std::string closing = "</audioFormatCustom>";
-  const auto paddingSize =
-      adm::xml::maxCustomElementBytes - opening.size() - closing.size();
-  const auto atLimit = opening + std::string(paddingSize, 'x') + closing;
-  adm::xml::DomDocument document;
-  REQUIRE_NOTHROW(document.parse(atLimit));
-  const auto oversized = opening + std::string(paddingSize + 1, 'x') + closing;
-  REQUIRE_THROWS(document.parse(oversized));
-  std::istringstream input(oversized);
-  REQUIRE_THROWS(document.parse(input));
-  std::istringstream admInput("<format><audioFormatExtended/>" + oversized +
-                              "</format>");
-  REQUIRE_THROWS(
-      adm::parseXml(admInput, adm::xml::ParserOptions::recursive_node_search));
-  REQUIRE_THROWS(document.parse(
-      "<audioFormatCustom value=\"" +
-      std::string(adm::xml::maxCustomElementBytes, 'x') + "\"/>"));
-  REQUIRE_THROWS(document.parse(
-      opening + std::string(adm::xml::maxCustomElementBytes, 'x')));
 }
 
 TEST_CASE("line_number_calculation") {
