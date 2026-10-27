@@ -16,15 +16,15 @@ namespace adm {
   // ---- Getter ---- //
   TypeDescriptor AudioTrackFormatId::get(
       detail::ParameterTraits<TypeDescriptor>::tag) const {
-    return boost::get_optional_value_or(channelType_, channelTypeDefault_);
+    return channelType_.value_or(channelTypeDefault_);
   }
   AudioTrackFormatIdValue AudioTrackFormatId::get(
       detail::ParameterTraits<AudioTrackFormatIdValue>::tag) const {
-    return boost::get_optional_value_or(value_, valueDefault_);
+    return value_.value_or(valueDefault_);
   }
   AudioTrackFormatIdCounter AudioTrackFormatId::get(
       detail::ParameterTraits<AudioTrackFormatIdCounter>::tag) const {
-    return boost::get_optional_value_or(counter_, counterDefault_);
+    return counter_.value_or(counterDefault_);
   }
 
   // ---- Has ---- //
@@ -44,15 +44,15 @@ namespace adm {
   // ---- isDefault ---- //
   bool AudioTrackFormatId::isDefault(
       detail::ParameterTraits<TypeDescriptor>::tag) const {
-    return channelType_ == boost::none;
+    return channelType_ == std::nullopt;
   }
   bool AudioTrackFormatId::isDefault(
       detail::ParameterTraits<AudioTrackFormatIdValue>::tag) const {
-    return value_ == boost::none;
+    return value_ == std::nullopt;
   }
   bool AudioTrackFormatId::isDefault(
       detail::ParameterTraits<AudioTrackFormatIdCounter>::tag) const {
-    return counter_ == boost::none;
+    return counter_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -68,15 +68,15 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void AudioTrackFormatId::unset(detail::ParameterTraits<TypeDescriptor>::tag) {
-    channelType_ = boost::none;
+    channelType_ = std::nullopt;
   }
   void AudioTrackFormatId::unset(
       detail::ParameterTraits<AudioTrackFormatIdValue>::tag) {
-    value_ = boost::none;
+    value_ = std::nullopt;
   }
   void AudioTrackFormatId::unset(
       detail::ParameterTraits<AudioTrackFormatIdCounter>::tag) {
-    counter_ = boost::none;
+    counter_ = std::nullopt;
   }
 
   // ---- Operators ---- //

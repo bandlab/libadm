@@ -1,114 +1,115 @@
 #pragma once
 
 #include <algorithm>
+#include <cstddef>
+#include <iterator>
 #include <memory>
+#include <span>
 #include <vector>
-#include <boost/range/iterator_range_core.hpp>
-#include <boost/iterator/iterator_adaptor.hpp>
 
 namespace adm {
 
   namespace detail {
 
-    /**
-     * Simple wrapper around an iterator to convert
-     * `std::shared_ptr<Element>` to `std::shared_ptr<const Element>`.
-     *
-     * While this conversion is directly supported by `std::shared_ptr`, we
-     * cannot use this automatically with iterators and containers. From a
-     * container's point of view, `std::shared_ptr<Element>` and
-     * `std::shared_ptr<const Element>` are two completly different types.
-     *
-     * Thus, we have this adaptor (which simply uses `boost::iterator_adaptor`
-     * with the correct template arguments) to do the conversion for us.
-     * @headerfile element_range.hpp <adm/helpers/element_range.hpp>
-     */
-    template <typename Iterator, typename Element>
-    struct ConstSharedPtrIteratorAdaptor
-        : boost::iterator_adaptor<
-              ConstSharedPtrIteratorAdaptor<Iterator, Element>, Iterator,
-              std::shared_ptr<const Element>, boost::use_default,
-              const std::shared_ptr<const Element>> {
-      typedef boost::iterator_adaptor<
-          ConstSharedPtrIteratorAdaptor<Iterator, Element>, Iterator,
-          std::shared_ptr<const Element>, boost::use_default,
-          const std::shared_ptr<const Element>>
-          Base;
+    // Converts shared/weak pointers on dereference without copying the container.
+    // Clang 14 with libstdc++ 11 cannot instantiate std::ranges::view_interface.
+    template <typename Pointer, typename ConstPointer>
+    class ConstPointerRange {
+      using Storage = std::span<const Pointer>;
 
-      ConstSharedPtrIteratorAdaptor() : Base() {}
-      explicit ConstSharedPtrIteratorAdaptor(Iterator it) : Base(it) {}
+     public:
+      class iterator {
+       public:
+        using value_type = ConstPointer;
+        using reference = const value_type;
+        using pointer = void;
+        using difference_type = std::ptrdiff_t;
+        using iterator_concept = std::forward_iterator_tag;
+        // Legacy forward iterators require an lvalue reference on dereference.
+        using iterator_category = std::input_iterator_tag;
+
+        iterator() = default;
+        explicit iterator(typename Storage::iterator current)
+            : current_(current) {}
+        reference operator*() const { return *current_; }
+        iterator &operator++() {
+          ++current_;
+          return *this;
+        }
+        iterator operator++(int) {
+          auto previous = *this;
+          ++*this;
+          return previous;
+        }
+        bool operator==(const iterator &) const = default;
+
+       private:
+        typename Storage::iterator current_{};
+      };
+
+      ConstPointerRange() = default;
+      explicit ConstPointerRange(Storage elements) : elements_(elements) {}
+      iterator begin() const { return iterator{elements_.begin()}; }
+      iterator end() const { return iterator{elements_.end()}; }
+      std::size_t size() const { return elements_.size(); }
+      bool empty() const { return elements_.empty(); }
+      explicit operator bool() const { return !empty(); }
+      const ConstPointer operator[](std::size_t index) const {
+        return elements_[index];
+      }
+      const ConstPointer front() const { return elements_.front(); }
+      const ConstPointer back() const { return elements_.back(); }
+
+     private:
+      Storage elements_;
     };
 
-    template <typename Iterator, typename Element>
-    struct ConstWeakPtrIteratorAdaptor
-        : boost::iterator_adaptor<
-              ConstWeakPtrIteratorAdaptor<Iterator, Element>, Iterator,
-              std::weak_ptr<const Element>, boost::use_default,
-              const std::weak_ptr<const Element>> {
-      typedef boost::iterator_adaptor<
-          ConstWeakPtrIteratorAdaptor<Iterator, Element>, Iterator,
-          std::weak_ptr<const Element>, boost::use_default,
-          const std::weak_ptr<const Element>>
-          Base;
-
-      ConstWeakPtrIteratorAdaptor() : Base() {}
-      explicit ConstWeakPtrIteratorAdaptor(Iterator it) : Base(it) {}
-    };
-
     /**
-     * Helper template to get the iterator_range type for
+     * Helper template to get the range type for
      * `std::shared_ptr<Element>` in an `std::vector`.
      * @sa struct ElementRangeImpl<const Element>
      * @headerfile element_range.hpp <adm/helpers/element_range.hpp>
      */
     template <typename Element>
     struct ElementRangeImpl {
-      using type = typename boost::iterator_range<
-          typename std::vector<std::shared_ptr<Element>>::const_iterator>;
+      using type = std::span<const std::shared_ptr<Element>>;
     };
 
     /**
-     * Specialization of the helper template to get the iterator_range type
+     * Specialization of the helper template to get the range type
      * for `std::shared_ptr<const Element>` in a `std::vector`.
      *
-     * The main trick here is that we use `ConstSharedPtrIteratorAdaptor` to
-     * get iterators to `std::shared_ptr<const Element>`  from a
-     * `std::vector` containing `std::shared_ptr<Element>`.
+     * Pointers are converted to const elements on dereference.
      * @headerfile element_range.hpp <adm/helpers/element_range.hpp>
      */
     template <typename Element>
     struct ElementRangeImpl<const Element> {
-      using type = typename boost::iterator_range<ConstSharedPtrIteratorAdaptor<
-          typename std::vector<std::shared_ptr<Element>>::const_iterator,
-          Element>>;
+      using type = ConstPointerRange<std::shared_ptr<Element>,
+                                     std::shared_ptr<const Element>>;
     };
 
     /**
-     * Helper template to get the iterator_range type for
+     * Helper template to get the range type for
      * `std::weak_ptr<Element>` in an `std::vector`.
      * @sa struct ElementRangeImpl<const Element>
      * @headerfile element_range.hpp <adm/helpers/element_range.hpp>
      */
     template <typename Element>
     struct ElementRangeWeakImpl {
-      using type = typename boost::iterator_range<
-          typename std::vector<std::weak_ptr<Element>>::const_iterator>;
+      using type = std::span<const std::weak_ptr<Element>>;
     };
 
     /**
-     * Specialization of the helper template to get the iterator_range type
+     * Specialization of the helper template to get the range type
      * for `std::weak_ptr<const Element>` in a `std::vector`.
      *
-     * The main trick here is that we use `ConstSharedPtrIteratorAdaptor` to
-     * get iterators to `std::weak_ptr<const Element>`  from a
-     * `std::vector` containing `std::weak_ptr<Element>`.
+     * Pointers are converted to const elements on dereference.
      * @headerfile element_range.hpp <adm/helpers/element_range.hpp>
      */
     template <typename Element>
     struct ElementRangeWeakImpl<const Element> {
-      using type = typename boost::iterator_range<ConstWeakPtrIteratorAdaptor<
-          typename std::vector<std::weak_ptr<Element>>::const_iterator,
-          Element>>;
+      using type = ConstPointerRange<std::weak_ptr<Element>,
+                                     std::weak_ptr<const Element>>;
     };
 
   }  // namespace detail
@@ -128,7 +129,9 @@ namespace adm {
    * its supporting classes, as this allows as to return a  range of "real"
    * `const` elements.
    *
-   * The range itself is simply implemented by using `boost::iterator_range`.
+   * The range uses `std::span`, with pointer conversion on dereference
+   * for const elements. No elements are copied or allocated. Const element
+   * iterators support forward traversal; indexed access is provided by the range.
    *
    * One make use the convenience `detail::makeElementRange()` function to
    * quickly create a range from an container.
@@ -151,13 +154,15 @@ namespace adm {
    @endcode
    *
    * @note
-   * Please note that the range will *always* be represented by
-   * `const_iterator`s. The difference is between `Element` and `const
-   * Element` is the *value type* of the iterators.
+   * The stored pointers cannot be modified through the range. The difference
+   * between `Element` and `const Element` is the pointee type of the pointers.
    *
    * The rationale for this is that it's not allowed to change the range
    * itself via its iterators, because there are member functions of the
    * parent elements to achieve this and ensure internal invariants to hold.
+   *
+   * Ranges and their iterators must not outlive the underlying container or
+   * a container operation that invalidates its iterators.
    */
   template <typename Element>
   using ElementRange = typename detail::ElementRangeImpl<Element>::type;
@@ -174,10 +179,7 @@ namespace adm {
      */
     template <typename Element, typename Container>
     ElementRange<const Element> makeElementRange(const Container &container) {
-      typedef typename Container::const_iterator const_iterator;
-      typedef ConstSharedPtrIteratorAdaptor<const_iterator, Element> Adaptor;
-      return boost::make_iterator_range(Adaptor(container.cbegin()),
-                                        Adaptor(container.cend()));
+      return ElementRange<const Element>{container};
     }
 
     /**
@@ -187,7 +189,7 @@ namespace adm {
      */
     template <typename Element, typename Container>
     ElementRange<Element> makeElementRange(Container &container) {
-      return boost::make_iterator_range(container.cbegin(), container.cend());
+      return ElementRange<Element>{container};
     }
 
     template <typename Element, typename Container>

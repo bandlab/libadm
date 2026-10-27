@@ -35,23 +35,23 @@ namespace adm {
     }
 
     XmlParsingError::XmlParsingError(const std::string& message,
-                                     boost::optional<int> line)
+                                     std::optional<int> line)
         : AdmException(formatMessage(message, line)), line_(line) {}
 
     XmlParsingError::XmlParsingError(int line)
         : XmlParsingError(formatMessage("Error parsing XML", line)) {}
 
-    std::string XmlParsingError::formatMessage(
-        const std::string& message, boost::optional<int> line) const {
+    std::string XmlParsingError::formatMessage(const std::string& message,
+                                               std::optional<int> line) const {
       if (line) {
-        return message + " (:" + std::to_string(line.get()) + ")";
+        return message + " (:" + std::to_string(line.value()) + ")";
       } else {
         return message;
       }
     }
 
     XmlParsingDuplicateId::XmlParsingDuplicateId(const std::string& id,
-                                                 boost::optional<int> line)
+                                                 std::optional<int> line)
         : XmlParsingError(formatMessage(id), line) {}
 
     std::string XmlParsingDuplicateId::formatMessage(const std::string& id) {
@@ -69,7 +69,7 @@ namespace adm {
 
     XmlParsingUnexpectedAttrError::XmlParsingUnexpectedAttrError(
         const std::string& attr, const std::string& value,
-        boost::optional<int> line)
+        std::optional<int> line)
         : XmlParsingError(formatMessage(attr, value), line) {}
 
     std::string XmlParsingUnexpectedAttrError::formatMessage(

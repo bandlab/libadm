@@ -17,9 +17,9 @@ TEST_CASE("audio_object parameter checks") {
   std::string const name{"MyObject"};
   auto audioObject = AudioObject::create(AudioObjectName(name));
   SECTION("AudioObjectId") {
-    check_required_param<AudioObjectId>(audioObject,
-                                        hasDefaultOf(AudioObjectIdValue()),
-                                        canBeSetTo(AudioObjectIdValue(1u)));
+    check_required_param<AudioObjectId>(
+        audioObject, hasDefaultOf(AudioObjectId{}),
+        canBeSetTo(AudioObjectId(AudioObjectIdValue(1u))));
   }
   SECTION("AudioObjectName") {
     check_required_param<AudioObjectName>(

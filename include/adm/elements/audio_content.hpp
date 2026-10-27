@@ -1,7 +1,7 @@
 /// @file audio_content.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <memory>
 #include <vector>
 #include "adm/elements/audio_content_id.hpp"
@@ -283,12 +283,12 @@ namespace adm {
     std::weak_ptr<Document> parent_;
     AudioContentId id_;
     AudioContentName name_;
-    boost::optional<AudioContentLanguage> language_;
+    std::optional<AudioContentLanguage> language_;
     std::vector<std::shared_ptr<AudioObject>> audioObjects_;
-    boost::optional<DialogueId> dialogueId_;
-    boost::optional<NonDialogueContentKind> nonDialogueContentKind_;
-    boost::optional<DialogueContentKind> dialogueContentKind_;
-    boost::optional<MixedContentKind> mixedContentKind_;
+    std::optional<DialogueId> dialogueId_;
+    std::optional<NonDialogueContentKind> nonDialogueContentKind_;
+    std::optional<DialogueContentKind> dialogueContentKind_;
+    std::optional<MixedContentKind> mixedContentKind_;
   };
 
   ADM_EXPORT std::ostream& operator<<(

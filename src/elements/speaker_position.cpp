@@ -16,32 +16,32 @@ namespace adm {
     return x_;
   }
   XMin CartesianSpeakerPosition::get(detail::ParameterTraits<XMin>::tag) const {
-    return xMin_.get();
+    return xMin_.value();
   }
   XMax CartesianSpeakerPosition::get(detail::ParameterTraits<XMax>::tag) const {
-    return xMax_.get();
+    return xMax_.value();
   }
   Y CartesianSpeakerPosition::get(detail::ParameterTraits<Y>::tag) const {
     return y_;
   }
   YMin CartesianSpeakerPosition::get(detail::ParameterTraits<YMin>::tag) const {
-    return yMin_.get();
+    return yMin_.value();
   }
   YMax CartesianSpeakerPosition::get(detail::ParameterTraits<YMax>::tag) const {
-    return yMax_.get();
+    return yMax_.value();
   }
   Z CartesianSpeakerPosition::get(detail::ParameterTraits<Z>::tag) const {
-    return boost::get_optional_value_or(z_, defaultZ);
+    return z_.value_or(defaultZ);
   }
   ZMin CartesianSpeakerPosition::get(detail::ParameterTraits<ZMin>::tag) const {
-    return zMin_.get();
+    return zMin_.value();
   }
   ZMax CartesianSpeakerPosition::get(detail::ParameterTraits<ZMax>::tag) const {
-    return zMax_.get();
+    return zMax_.value();
   }
   ScreenEdgeLock CartesianSpeakerPosition::get(
       detail::ParameterTraits<ScreenEdgeLock>::tag) const {
-    return screenEdgeLock_.get();
+    return screenEdgeLock_.value();
   }
 
   // ---- Has ---- //
@@ -49,32 +49,32 @@ namespace adm {
     return true;
   }
   bool CartesianSpeakerPosition::has(detail::ParameterTraits<XMin>::tag) const {
-    return xMin_ != boost::none;
+    return xMin_ != std::nullopt;
   }
   bool CartesianSpeakerPosition::has(detail::ParameterTraits<XMax>::tag) const {
-    return xMax_ != boost::none;
+    return xMax_ != std::nullopt;
   }
   bool CartesianSpeakerPosition::has(detail::ParameterTraits<Y>::tag) const {
     return true;
   }
   bool CartesianSpeakerPosition::has(detail::ParameterTraits<YMin>::tag) const {
-    return yMin_ != boost::none;
+    return yMin_ != std::nullopt;
   }
   bool CartesianSpeakerPosition::has(detail::ParameterTraits<YMax>::tag) const {
-    return yMax_ != boost::none;
+    return yMax_ != std::nullopt;
   }
   bool CartesianSpeakerPosition::has(detail::ParameterTraits<Z>::tag) const {
-    return z_ != boost::none;
+    return z_ != std::nullopt;
   }
   bool CartesianSpeakerPosition::has(detail::ParameterTraits<ZMin>::tag) const {
-    return zMin_ != boost::none;
+    return zMin_ != std::nullopt;
   }
   bool CartesianSpeakerPosition::has(detail::ParameterTraits<ZMax>::tag) const {
-    return zMax_ != boost::none;
+    return zMax_ != std::nullopt;
   }
   bool CartesianSpeakerPosition::has(
       detail::ParameterTraits<ScreenEdgeLock>::tag) const {
-    return screenEdgeLock_ != boost::none;
+    return screenEdgeLock_ != std::nullopt;
   }
 
   bool CartesianSpeakerPosition::isDefault(
@@ -98,29 +98,29 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void CartesianSpeakerPosition::unset(detail::ParameterTraits<XMin>::tag) {
-    xMin_ = boost::none;
+    xMin_ = std::nullopt;
   }
   void CartesianSpeakerPosition::unset(detail::ParameterTraits<XMax>::tag) {
-    xMax_ = boost::none;
+    xMax_ = std::nullopt;
   }
   void CartesianSpeakerPosition::unset(detail::ParameterTraits<YMin>::tag) {
-    yMin_ = boost::none;
+    yMin_ = std::nullopt;
   }
   void CartesianSpeakerPosition::unset(detail::ParameterTraits<YMax>::tag) {
-    yMax_ = boost::none;
+    yMax_ = std::nullopt;
   }
   void CartesianSpeakerPosition::unset(detail::ParameterTraits<Z>::tag) {
-    z_ = boost::none;
+    z_ = std::nullopt;
   }
   void CartesianSpeakerPosition::unset(detail::ParameterTraits<ZMin>::tag) {
-    zMin_ = boost::none;
+    zMin_ = std::nullopt;
   }
   void CartesianSpeakerPosition::unset(detail::ParameterTraits<ZMax>::tag) {
-    zMax_ = boost::none;
+    zMax_ = std::nullopt;
   }
   void CartesianSpeakerPosition::unset(
       detail::ParameterTraits<ScreenEdgeLock>::tag) {
-    screenEdgeLock_ = boost::none;
+    screenEdgeLock_ = std::nullopt;
   }
 
   // ---- Getter ---- //
@@ -130,11 +130,11 @@ namespace adm {
   }
   AzimuthMin SphericalSpeakerPosition::get(
       detail::ParameterTraits<AzimuthMin>::tag) const {
-    return azimuthMin_.get();
+    return azimuthMin_.value();
   }
   AzimuthMax SphericalSpeakerPosition::get(
       detail::ParameterTraits<AzimuthMax>::tag) const {
-    return azimuthMax_.get();
+    return azimuthMax_.value();
   }
   Elevation SphericalSpeakerPosition::get(
       detail::ParameterTraits<Elevation>::tag) const {
@@ -142,27 +142,27 @@ namespace adm {
   }
   ElevationMin SphericalSpeakerPosition::get(
       detail::ParameterTraits<ElevationMin>::tag) const {
-    return elevationMin_.get();
+    return elevationMin_.value();
   }
   ElevationMax SphericalSpeakerPosition::get(
       detail::ParameterTraits<ElevationMax>::tag) const {
-    return elevationMax_.get();
+    return elevationMax_.value();
   }
   Distance SphericalSpeakerPosition::get(
       detail::ParameterTraits<Distance>::tag) const {
-    return boost::get_optional_value_or(distance_, defaultDistance);
+    return distance_.value_or(defaultDistance);
   }
   DistanceMin SphericalSpeakerPosition::get(
       detail::ParameterTraits<DistanceMin>::tag) const {
-    return distanceMin_.get();
+    return distanceMin_.value();
   }
   DistanceMax SphericalSpeakerPosition::get(
       detail::ParameterTraits<DistanceMax>::tag) const {
-    return distanceMax_.get();
+    return distanceMax_.value();
   }
   ScreenEdgeLock SphericalSpeakerPosition::get(
       detail::ParameterTraits<ScreenEdgeLock>::tag) const {
-    return screenEdgeLock_.get();
+    return screenEdgeLock_.value();
   }
 
   // ---- Has ---- //
@@ -172,11 +172,11 @@ namespace adm {
   }
   bool SphericalSpeakerPosition::has(
       detail::ParameterTraits<AzimuthMin>::tag) const {
-    return azimuthMin_ != boost::none;
+    return azimuthMin_ != std::nullopt;
   }
   bool SphericalSpeakerPosition::has(
       detail::ParameterTraits<AzimuthMax>::tag) const {
-    return azimuthMax_ != boost::none;
+    return azimuthMax_ != std::nullopt;
   }
   bool SphericalSpeakerPosition::has(
       detail::ParameterTraits<Elevation>::tag) const {
@@ -184,27 +184,27 @@ namespace adm {
   }
   bool SphericalSpeakerPosition::has(
       detail::ParameterTraits<ElevationMin>::tag) const {
-    return elevationMin_ != boost::none;
+    return elevationMin_ != std::nullopt;
   }
   bool SphericalSpeakerPosition::has(
       detail::ParameterTraits<ElevationMax>::tag) const {
-    return elevationMax_ != boost::none;
+    return elevationMax_ != std::nullopt;
   }
   bool SphericalSpeakerPosition::has(
       detail::ParameterTraits<Distance>::tag) const {
-    return distance_ != boost::none;
+    return distance_ != std::nullopt;
   }
   bool SphericalSpeakerPosition::has(
       detail::ParameterTraits<DistanceMin>::tag) const {
-    return distanceMin_ != boost::none;
+    return distanceMin_ != std::nullopt;
   }
   bool SphericalSpeakerPosition::has(
       detail::ParameterTraits<DistanceMax>::tag) const {
-    return distanceMax_ != boost::none;
+    return distanceMax_ != std::nullopt;
   }
   bool SphericalSpeakerPosition::has(
       detail::ParameterTraits<ScreenEdgeLock>::tag) const {
-    return screenEdgeLock_ != boost::none;
+    return screenEdgeLock_ != std::nullopt;
   }
 
   bool SphericalSpeakerPosition::isDefault(
@@ -245,34 +245,34 @@ namespace adm {
   // ---- Unsetter ---- //
   void SphericalSpeakerPosition::unset(
       detail::ParameterTraits<AzimuthMin>::tag) {
-    azimuthMin_ = boost::none;
+    azimuthMin_ = std::nullopt;
   }
   void SphericalSpeakerPosition::unset(
       detail::ParameterTraits<AzimuthMax>::tag) {
-    azimuthMax_ = boost::none;
+    azimuthMax_ = std::nullopt;
   }
   void SphericalSpeakerPosition::unset(
       detail::ParameterTraits<ElevationMin>::tag) {
-    elevationMin_ = boost::none;
+    elevationMin_ = std::nullopt;
   }
   void SphericalSpeakerPosition::unset(
       detail::ParameterTraits<ElevationMax>::tag) {
-    elevationMax_ = boost::none;
+    elevationMax_ = std::nullopt;
   }
   void SphericalSpeakerPosition::unset(detail::ParameterTraits<Distance>::tag) {
-    distance_ = boost::none;
+    distance_ = std::nullopt;
   }
   void SphericalSpeakerPosition::unset(
       detail::ParameterTraits<DistanceMin>::tag) {
-    distanceMin_ = boost::none;
+    distanceMin_ = std::nullopt;
   }
   void SphericalSpeakerPosition::unset(
       detail::ParameterTraits<DistanceMax>::tag) {
-    distanceMax_ = boost::none;
+    distanceMax_ = std::nullopt;
   }
   void SphericalSpeakerPosition::unset(
       detail::ParameterTraits<ScreenEdgeLock>::tag) {
-    screenEdgeLock_ = boost::none;
+    screenEdgeLock_ = std::nullopt;
   }
 
 }  // namespace adm

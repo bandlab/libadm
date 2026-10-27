@@ -2,7 +2,7 @@
 #include <type_traits>
 #include <catch2/catch.hpp>
 #include <adm/elements/audio_block_format_objects.hpp>
-#include <boost/type_index.hpp>
+#include <typeinfo>
 #include "parameter_comparators.hpp"
 namespace adm_test {
   namespace detail {
@@ -10,9 +10,8 @@ namespace adm_test {
     template <typename ParamT, typename ElementT, typename ValueT>
     void check_required_impl(ElementT& element, ValueT expectedInitial,
                              ValueT expectedAfterSet) {
-      using boost::typeindex::type_id;
-      INFO("element type: " << type_id<ElementT>().pretty_name());
-      INFO("parameter type: " << type_id<ParamT>().pretty_name());
+      INFO("element type: " << typeid(ElementT).name());
+      INFO("parameter type: " << typeid(ParamT).name());
       SECTION("check default constructed element") {
         REQUIRE(element.template has<ParamT>() == true);
         REQUIRE(element.template isDefault<ParamT>() == false);
@@ -29,9 +28,8 @@ namespace adm_test {
     template <typename ParamT, typename ElementT, typename ValueT>
     void check_default_impl(ElementT& element, ValueT expectedDefault,
                             ValueT expectedAfterSet) {
-      using boost::typeindex::type_id;
-      INFO("element type: " << type_id<ElementT>().pretty_name());
-      INFO("parameter type: " << type_id<ParamT>().pretty_name());
+      INFO("element type: " << typeid(ElementT).name());
+      INFO("parameter type: " << typeid(ParamT).name());
       SECTION("check default constructed element") {
         REQUIRE(element.template has<ParamT>() == true);
         REQUIRE(element.template isDefault<ParamT>() == true);
@@ -53,9 +51,8 @@ namespace adm_test {
 
     template <typename ParamT, typename ElementT, typename ValueT>
     void check_optional_impl(ElementT& element, ValueT expectedAfterSet) {
-      using boost::typeindex::type_id;
-      INFO("element type: " << type_id<ElementT>().pretty_name());
-      INFO("parameter type: " << type_id<ParamT>().pretty_name());
+      INFO("element type: " << typeid(ElementT).name());
+      INFO("parameter type: " << typeid(ParamT).name());
       SECTION("check default constructed element") {
         REQUIRE(element.template has<ParamT>() == false);
         REQUIRE(element.template isDefault<ParamT>() == false);

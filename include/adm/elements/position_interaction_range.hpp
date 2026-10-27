@@ -1,8 +1,8 @@
 /// @file position_interaction_range.hpp
 #pragma once
 
-#include <boost/optional.hpp>
-#include <boost/variant.hpp>
+#include <optional>
+#include <variant>
 #include <cmath>
 #include <iosfwd>
 #include "adm/elements/position_types.hpp"
@@ -267,18 +267,18 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<ZInteractionMin>::tag);
     ADM_EXPORT void unset(detail::ParameterTraits<ZInteractionMax>::tag);
 
-    boost::optional<AzimuthInteractionMin> azimuthMin_;
-    boost::optional<AzimuthInteractionMax> azimuthMax_;
-    boost::optional<ElevationInteractionMin> elevationMin_;
-    boost::optional<ElevationInteractionMax> elevationMax_;
-    boost::optional<DistanceInteractionMin> distanceMin_;
-    boost::optional<DistanceInteractionMax> distanceMax_;
-    boost::optional<XInteractionMin> xMin_;
-    boost::optional<XInteractionMax> xMax_;
-    boost::optional<YInteractionMin> yMin_;
-    boost::optional<YInteractionMax> yMax_;
-    boost::optional<ZInteractionMin> zMin_;
-    boost::optional<ZInteractionMax> zMax_;
+    std::optional<AzimuthInteractionMin> azimuthMin_;
+    std::optional<AzimuthInteractionMax> azimuthMax_;
+    std::optional<ElevationInteractionMin> elevationMin_;
+    std::optional<ElevationInteractionMax> elevationMax_;
+    std::optional<DistanceInteractionMin> distanceMin_;
+    std::optional<DistanceInteractionMax> distanceMax_;
+    std::optional<XInteractionMin> xMin_;
+    std::optional<XInteractionMax> xMax_;
+    std::optional<YInteractionMin> yMin_;
+    std::optional<YInteractionMax> yMax_;
+    std::optional<ZInteractionMin> zMin_;
+    std::optional<ZInteractionMax> zMax_;
   };
 
   // ---- Implementation ---- //

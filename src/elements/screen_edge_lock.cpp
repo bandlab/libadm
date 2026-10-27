@@ -5,20 +5,20 @@ namespace adm {
   // ---- Getter ---- //
   HorizontalEdge ScreenEdgeLock::get(
       detail::ParameterTraits<HorizontalEdge>::tag) const {
-    return horizontal_.get();
+    return horizontal_.value();
   }
 
   VerticalEdge ScreenEdgeLock::get(
       detail::ParameterTraits<VerticalEdge>::tag) const {
-    return vertical_.get();
+    return vertical_.value();
   }
 
   // ---- Has ---- //
   bool ScreenEdgeLock::has(detail::ParameterTraits<HorizontalEdge>::tag) const {
-    return horizontal_ != boost::none;
+    return horizontal_ != std::nullopt;
   }
   bool ScreenEdgeLock::has(detail::ParameterTraits<VerticalEdge>::tag) const {
-    return vertical_ != boost::none;
+    return vertical_ != std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -39,10 +39,10 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void ScreenEdgeLock::unset(detail::ParameterTraits<HorizontalEdge>::tag) {
-    horizontal_ = boost::none;
+    horizontal_ = std::nullopt;
   }
   void ScreenEdgeLock::unset(detail::ParameterTraits<VerticalEdge>::tag) {
-    vertical_ = boost::none;
+    vertical_ = std::nullopt;
   }
 
 }  // namespace adm

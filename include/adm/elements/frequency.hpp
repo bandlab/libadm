@@ -1,7 +1,7 @@
 /// @file frequency.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include "adm/detail/named_type.hpp"
 #include "adm/detail/named_option_helper.hpp"
 #include "adm/export.h"
@@ -117,8 +117,8 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<HighPass>::tag);
     ADM_EXPORT void unset(detail::ParameterTraits<LowPass>::tag);
 
-    boost::optional<HighPass> highPassFrequency_;
-    boost::optional<LowPass> lowPassFrequency_;
+    std::optional<HighPass> highPassFrequency_;
+    std::optional<LowPass> lowPassFrequency_;
   };
 
   // ---- Free functions ---- //

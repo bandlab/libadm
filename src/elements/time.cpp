@@ -1,5 +1,6 @@
 #include "adm/elements/time.hpp"
-#include <boost/integer/common_factor.hpp>
+#include <numeric>
+#include <limits>
 #include <cmath>
 #include <iomanip>
 #include <regex>
@@ -15,12 +16,33 @@ namespace adm {
   }  // namespace detail
 
   FractionalTime FractionalTime::normalised() const {
-    int64_t gcd = boost::integer::gcd(numerator(), denominator());
+    const auto gcd = std::gcd(numerator(), denominator());
     return {numerator() / gcd, denominator() / gcd};
   }
 
-  struct AsNanosecondsVisitor
-      : public boost::static_visitor<std::chrono::nanoseconds> {
+  FractionalTime FractionalTime::operator-(const FractionalTime& other) const {
+    const auto a = normalised();
+    const auto b = other.normalised();
+    const auto divisor = std::gcd(a.denominator(), b.denominator());
+    const auto multiply = [](int64_t value, int64_t positive) {
+      if (value > std::numeric_limits<int64_t>::max() / positive ||
+          value < std::numeric_limits<int64_t>::min() / positive)
+        throw std::overflow_error("Fractional time multiplication overflow");
+      return value * positive;
+    };
+    const auto left = multiply(a.numerator(), b.denominator() / divisor);
+    const auto right = multiply(b.numerator(), a.denominator() / divisor);
+    if ((right > 0 && left < std::numeric_limits<int64_t>::min() + right) ||
+        (right < 0 && left > std::numeric_limits<int64_t>::max() + right))
+      throw std::overflow_error("Fractional time subtraction overflow");
+    const auto numerator = left - right;
+    const auto reduction = std::gcd(numerator, divisor);
+    return {numerator / reduction,
+            multiply(a.denominator() / divisor,
+                     b.denominator() / reduction)};
+  }
+
+  struct AsNanosecondsVisitor {
     std::chrono::nanoseconds operator()(
         const std::chrono::nanoseconds& time) const {
       return time;
@@ -33,7 +55,7 @@ namespace adm {
     }
   };
 
-  struct AsFractionalVisitor : public boost::static_visitor<FractionalTime> {
+  struct AsFractionalVisitor {
     FractionalTime operator()(const std::chrono::nanoseconds& time) const {
       return {time.count(), 1000000000};
     }
@@ -42,11 +64,11 @@ namespace adm {
   };
 
   std::chrono::nanoseconds Time::asNanoseconds() const {
-    return boost::apply_visitor(AsNanosecondsVisitor(), time);
+    return std::visit(AsNanosecondsVisitor(), time);
   }
 
   FractionalTime Time::asFractional() const {
-    return boost::apply_visitor(AsFractionalVisitor(), time);
+    return std::visit(AsFractionalVisitor(), time);
   }
 
   Time parseTimecode(const std::string& timecode) {
@@ -99,7 +121,7 @@ namespace adm {
     }
   }
 
-  struct FormatTimeVisitor : public boost::static_visitor<std::string> {
+  struct FormatTimeVisitor {
     std::string operator()(const std::chrono::nanoseconds& time) const {
       std::stringstream ss;
       auto formatTime = time;
@@ -159,7 +181,7 @@ namespace adm {
   };
 
   std::string formatTimecode(const Time& time) {
-    return boost::apply_visitor(FormatTimeVisitor(), time.asVariant());
+    return std::visit(FormatTimeVisitor(), time.asVariant());
   }
 
 }  // namespace adm

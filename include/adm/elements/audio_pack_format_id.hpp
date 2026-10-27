@@ -1,7 +1,7 @@
 /// @file audio_pack_format_id.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <string>
 #include "adm/elements/type_descriptor.hpp"
 #include "adm/detail/named_option_helper.hpp"
@@ -114,8 +114,8 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<TypeDescriptor>::tag);
     ADM_EXPORT void unset(detail::ParameterTraits<AudioPackFormatIdValue>::tag);
 
-    boost::optional<TypeDescriptor> channelType_;
-    boost::optional<AudioPackFormatIdValue> value_;
+    std::optional<TypeDescriptor> channelType_;
+    std::optional<AudioPackFormatIdValue> value_;
 
     static const TypeDescriptor channelTypeDefault_;
     static const AudioPackFormatIdValue valueDefault_;

@@ -21,32 +21,32 @@ namespace adm {
   }
   AudioContentLanguage AudioContent::get(
       detail::ParameterTraits<AudioContentLanguage>::tag) const {
-    return language_.get();
+    return language_.value();
   }
   DialogueId AudioContent::get(detail::ParameterTraits<DialogueId>::tag) const {
-    return dialogueId_.get();
+    return dialogueId_.value();
   }
   ContentKind AudioContent::get(
       detail::ParameterTraits<ContentKind>::tag) const {
     if (has<NonDialogueContentKind>()) {
-      return ContentKind(nonDialogueContentKind_.get());
+      return ContentKind(nonDialogueContentKind_.value());
     } else if (has<DialogueContentKind>()) {
-      return ContentKind(dialogueContentKind_.get());
+      return ContentKind(dialogueContentKind_.value());
     } else {
-      return ContentKind(mixedContentKind_.get());
+      return ContentKind(mixedContentKind_.value());
     }
   }
   NonDialogueContentKind AudioContent::get(
       detail::ParameterTraits<NonDialogueContentKind>::tag) const {
-    return nonDialogueContentKind_.get();
+    return nonDialogueContentKind_.value();
   }
   DialogueContentKind AudioContent::get(
       detail::ParameterTraits<DialogueContentKind>::tag) const {
-    return dialogueContentKind_.get();
+    return dialogueContentKind_.value();
   }
   MixedContentKind AudioContent::get(
       detail::ParameterTraits<MixedContentKind>::tag) const {
-    return mixedContentKind_.get();
+    return mixedContentKind_.value();
   }
 
   // ---- Has ---- //
@@ -58,26 +58,26 @@ namespace adm {
   }
   bool AudioContent::has(
       detail::ParameterTraits<AudioContentLanguage>::tag) const {
-    return language_ != boost::none;
+    return language_ != std::nullopt;
   }
   bool AudioContent::has(detail::ParameterTraits<DialogueId>::tag) const {
-    return dialogueId_ != boost::none;
+    return dialogueId_ != std::nullopt;
   }
   bool AudioContent::has(detail::ParameterTraits<ContentKind>::tag) const {
-    return nonDialogueContentKind_ != boost::none ||
-           dialogueContentKind_ != boost::none ||
-           mixedContentKind_ != boost::none;
+    return nonDialogueContentKind_ != std::nullopt ||
+           dialogueContentKind_ != std::nullopt ||
+           mixedContentKind_ != std::nullopt;
   }
   bool AudioContent::has(
       detail::ParameterTraits<NonDialogueContentKind>::tag) const {
-    return nonDialogueContentKind_ != boost::none;
+    return nonDialogueContentKind_ != std::nullopt;
   }
   bool AudioContent::has(
       detail::ParameterTraits<DialogueContentKind>::tag) const {
-    return dialogueContentKind_ != boost::none;
+    return dialogueContentKind_ != std::nullopt;
   }
   bool AudioContent::has(detail::ParameterTraits<MixedContentKind>::tag) const {
-    return mixedContentKind_ != boost::none;
+    return mixedContentKind_ != std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -96,7 +96,7 @@ namespace adm {
     language_ = std::move(language);
   }
   void AudioContent::set(DialogueId id) {
-    if (dialogueId_ && dialogueId_.get() == id) {
+    if (dialogueId_ && dialogueId_.value() == id) {
       return;
     }
     unset<DialogueId>();
@@ -110,12 +110,12 @@ namespace adm {
     }
   }
   void AudioContent::set(ContentKind kind) {
-    if (kind.which() == 0) {
-      set(boost::get<NonDialogueContentKind>(kind));
-    } else if (kind.which() == 1) {
-      set(boost::get<DialogueContentKind>(kind));
-    } else if (kind.which() == 2) {
-      set(boost::get<MixedContentKind>(kind));
+    if (kind.index() == 0) {
+      set(std::get<NonDialogueContentKind>(kind));
+    } else if (kind.index() == 1) {
+      set(std::get<DialogueContentKind>(kind));
+    } else if (kind.index() == 2) {
+      set(std::get<MixedContentKind>(kind));
     }
   }
   void AudioContent::set(NonDialogueContentKind kind) {
@@ -136,13 +136,13 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void AudioContent::unset(detail::ParameterTraits<AudioContentLanguage>::tag) {
-    language_ = boost::none;
+    language_ = std::nullopt;
   }
   void AudioContent::unset(detail::ParameterTraits<DialogueId>::tag) {
-    dialogueId_ = boost::none;
-    nonDialogueContentKind_ = boost::none;
-    dialogueContentKind_ = boost::none;
-    mixedContentKind_ = boost::none;
+    dialogueId_ = std::nullopt;
+    nonDialogueContentKind_ = std::nullopt;
+    dialogueContentKind_ = std::nullopt;
+    mixedContentKind_ = std::nullopt;
   }
   void AudioContent::unset(detail::ParameterTraits<ContentKind>::tag) {
     unset<NonDialogueContentKind>();
@@ -213,7 +213,8 @@ namespace adm {
       os << ", dialogueId=" << get<DialogueId>();
     }
     if (has<ContentKind>()) {
-      os << ", contentKind=" << get<ContentKind>();
+      os << ", contentKind=";
+      std::visit([&os](const auto& kind) { os << kind; }, get<ContentKind>());
     }
     if (has<NonDialogueContentKind>()) {
       os << ", nonDialogueContentKind=" << get<NonDialogueContentKind>();

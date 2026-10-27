@@ -21,13 +21,6 @@ jobs:
         shared: [true, false]
         build_type: [Release]
         include:
-          - os: windows-latest
-            triplet: x64-windows
-          - os: macos-latest
-            triplet: x64-osx
-          - os: ubuntu-latest
-            triplet: x64-linux
-
           - os: ubuntu-latest
             shared: true
             build_type: Coverage
@@ -39,15 +32,6 @@ jobs:
 
       - name: Get CMake and ninja
         uses: lukka/get-cmake@latest
-
-      - name: Restore artifacts, or run vcpkg, build and cache artifacts
-        uses: lukka/run-vcpkg@v7
-        id: runvcpkg
-        with:
-          vcpkgArguments: 'boost-variant boost-optional boost-format boost-functional boost-range boost-iterator boost-rational'
-          vcpkgTriplet: '${{ matrix.triplet }}'
-          vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
-          vcpkgGitCommitId: '7ad236f60f5f7197e93c4d7f0807622f4899076d'
 
       - name: 'Install ubuntu dependencies'
         if: matrix.os == 'ubuntu-latest'
@@ -99,7 +83,7 @@ jobs:
         with:
           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-          useVcpkgToolchainFile: true
+          useVcpkgToolchainFile: false
           buildDirectory: '${{ runner.workspace }}/b/ninja'
           cmakeAppendedArgs: >-
             -GNinja

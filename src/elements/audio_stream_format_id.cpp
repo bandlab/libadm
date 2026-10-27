@@ -14,11 +14,11 @@ namespace adm {
   // ---- Getter ---- //
   TypeDescriptor AudioStreamFormatId::get(
       detail::ParameterTraits<TypeDescriptor>::tag) const {
-    return boost::get_optional_value_or(channelType_, channelTypeDefault_);
+    return channelType_.value_or(channelTypeDefault_);
   }
   AudioStreamFormatIdValue AudioStreamFormatId::get(
       detail::ParameterTraits<AudioStreamFormatIdValue>::tag) const {
-    return boost::get_optional_value_or(value_, valueDefault_);
+    return value_.value_or(valueDefault_);
   }
 
   // ---- Has ---- //
@@ -34,11 +34,11 @@ namespace adm {
   // ---- isDefault ---- //
   bool AudioStreamFormatId::isDefault(
       detail::ParameterTraits<TypeDescriptor>::tag) const {
-    return channelType_ == boost::none;
+    return channelType_ == std::nullopt;
   }
   bool AudioStreamFormatId::isDefault(
       detail::ParameterTraits<AudioStreamFormatIdValue>::tag) const {
-    return value_ == boost::none;
+    return value_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -52,11 +52,11 @@ namespace adm {
   // ---- Unsetter ---- //
   void AudioStreamFormatId::unset(
       detail::ParameterTraits<TypeDescriptor>::tag) {
-    channelType_ = boost::none;
+    channelType_ = std::nullopt;
   }
   void AudioStreamFormatId::unset(
       detail::ParameterTraits<AudioStreamFormatIdValue>::tag) {
-    value_ = boost::none;
+    value_ = std::nullopt;
   }
 
   // ---- Operators ---- //
