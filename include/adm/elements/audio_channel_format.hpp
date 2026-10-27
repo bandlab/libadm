@@ -5,6 +5,7 @@
 #include <optional>
 #include <variant>
 #include <memory>
+#include <span>
 #include <vector>
 #include "adm/elements/audio_block_format_binaural.hpp"
 #include "adm/elements/audio_block_format_direct_speakers.hpp"
@@ -31,8 +32,7 @@ namespace adm {
    * @headerfile audio_channel_format.hpp <adm/elements/channel_format.hpp>
    */
   template <typename AudioBlockFormat>
-  using BlockFormatsConstRange = std::ranges::subrange<
-      typename std::vector<AudioBlockFormat>::const_iterator>;
+  using BlockFormatsConstRange = std::span<const AudioBlockFormat>;
 
   /**
    * Helper  to deduce the correct `IteratorRange` type for
@@ -40,8 +40,7 @@ namespace adm {
    * @headerfile audio_channel_format.hpp <adm/elements/channel_format.hpp>
    */
   template <typename AudioBlockFormat>
-  using BlockFormatsRange =
-      std::ranges::subrange<typename std::vector<AudioBlockFormat>::iterator>;
+  using BlockFormatsRange = std::span<AudioBlockFormat>;
 
   /// @brief Tag for NamedType ::AudioChannelFormatName
   struct AudioChannelFormatNameTag {};

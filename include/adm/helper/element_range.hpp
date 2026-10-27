@@ -1,22 +1,67 @@
 #pragma once
 
 #include <algorithm>
+#include <cstddef>
 #include <iterator>
 #include <memory>
-#include <ranges>
+#include <span>
 #include <vector>
 
 namespace adm {
 
   namespace detail {
 
-    /**
-     * Converts shared or weak pointers to pointers to const elements.
-     * @headerfile element_range.hpp <adm/helpers/element_range.hpp>
-     */
-    template <typename Pointer>
-    struct ConstPointer {
-      const Pointer operator()(const auto& pointer) const { return pointer; }
+    // Converts shared/weak pointers on dereference without copying the container.
+    // Clang 14 with libstdc++ 11 cannot instantiate std::ranges::view_interface.
+    template <typename Pointer, typename ConstPointer>
+    class ConstPointerRange {
+      using Storage = std::span<const Pointer>;
+
+     public:
+      class iterator {
+       public:
+        using value_type = ConstPointer;
+        using reference = const value_type;
+        using pointer = void;
+        using difference_type = std::ptrdiff_t;
+        using iterator_concept = std::forward_iterator_tag;
+        // Legacy forward iterators require an lvalue reference on dereference.
+        using iterator_category = std::input_iterator_tag;
+
+        iterator() = default;
+        explicit iterator(typename Storage::iterator current)
+            : current_(current) {}
+        reference operator*() const { return *current_; }
+        iterator &operator++() {
+          ++current_;
+          return *this;
+        }
+        iterator operator++(int) {
+          auto previous = *this;
+          ++*this;
+          return previous;
+        }
+        bool operator==(const iterator &) const = default;
+
+       private:
+        typename Storage::iterator current_{};
+      };
+
+      ConstPointerRange() = default;
+      explicit ConstPointerRange(Storage elements) : elements_(elements) {}
+      iterator begin() const { return iterator{elements_.begin()}; }
+      iterator end() const { return iterator{elements_.end()}; }
+      std::size_t size() const { return elements_.size(); }
+      bool empty() const { return elements_.empty(); }
+      explicit operator bool() const { return !empty(); }
+      const ConstPointer operator[](std::size_t index) const {
+        return elements_[index];
+      }
+      const ConstPointer front() const { return elements_.front(); }
+      const ConstPointer back() const { return elements_.back(); }
+
+     private:
+      Storage elements_;
     };
 
     /**
@@ -27,22 +72,20 @@ namespace adm {
      */
     template <typename Element>
     struct ElementRangeImpl {
-      using type = std::ranges::subrange<
-          typename std::vector<std::shared_ptr<Element>>::const_iterator>;
+      using type = std::span<const std::shared_ptr<Element>>;
     };
 
     /**
      * Specialization of the helper template to get the range type
      * for `std::shared_ptr<const Element>` in a `std::vector`.
      *
-     * A transform view converts pointers to const elements on dereference.
+     * Pointers are converted to const elements on dereference.
      * @headerfile element_range.hpp <adm/helpers/element_range.hpp>
      */
     template <typename Element>
     struct ElementRangeImpl<const Element> {
-      using type = std::ranges::transform_view<
-          typename ElementRangeImpl<Element>::type,
-          ConstPointer<std::shared_ptr<const Element>>>;
+      using type = ConstPointerRange<std::shared_ptr<Element>,
+                                     std::shared_ptr<const Element>>;
     };
 
     /**
@@ -53,22 +96,20 @@ namespace adm {
      */
     template <typename Element>
     struct ElementRangeWeakImpl {
-      using type = std::ranges::subrange<
-          typename std::vector<std::weak_ptr<Element>>::const_iterator>;
+      using type = std::span<const std::weak_ptr<Element>>;
     };
 
     /**
      * Specialization of the helper template to get the range type
      * for `std::weak_ptr<const Element>` in a `std::vector`.
      *
-     * A transform view converts pointers to const elements on dereference.
+     * Pointers are converted to const elements on dereference.
      * @headerfile element_range.hpp <adm/helpers/element_range.hpp>
      */
     template <typename Element>
     struct ElementRangeWeakImpl<const Element> {
-      using type = std::ranges::transform_view<
-          typename ElementRangeWeakImpl<Element>::type,
-          ConstPointer<std::weak_ptr<const Element>>>;
+      using type = ConstPointerRange<std::weak_ptr<Element>,
+                                     std::weak_ptr<const Element>>;
     };
 
   }  // namespace detail
@@ -88,8 +129,9 @@ namespace adm {
    * its supporting classes, as this allows as to return a  range of "real"
    * `const` elements.
    *
-   * The range uses `std::ranges::subrange`, with a `std::ranges::transform_view`
-   * for const elements.
+   * The range uses `std::span`, with pointer conversion on dereference
+   * for const elements. No elements are copied or allocated. Const element
+   * iterators support forward traversal; indexed access is provided by the range.
    *
    * One make use the convenience `detail::makeElementRange()` function to
    * quickly create a range from an container.
@@ -112,16 +154,15 @@ namespace adm {
    @endcode
    *
    * @note
-   * Please note that the range will *always* be represented by
-   * `const_iterator`s. The difference is between `Element` and `const
-   * Element` is the *value type* of the iterators.
+   * The stored pointers cannot be modified through the range. The difference
+   * between `Element` and `const Element` is the pointee type of the pointers.
    *
    * The rationale for this is that it's not allowed to change the range
    * itself via its iterators, because there are member functions of the
    * parent elements to achieve this and ensure internal invariants to hold.
    *
-   * Iterators for const elements must not outlive the range view. This also
-   * applies to ElementWeakRange<const Element>.
+   * Ranges and their iterators must not outlive the underlying container or
+   * a container operation that invalidates its iterators.
    */
   template <typename Element>
   using ElementRange = typename detail::ElementRangeImpl<Element>::type;
@@ -138,8 +179,7 @@ namespace adm {
      */
     template <typename Element, typename Container>
     ElementRange<const Element> makeElementRange(const Container &container) {
-      return {std::ranges::subrange(container.cbegin(), container.cend()),
-              ConstPointer<std::shared_ptr<const Element>>{}};
+      return ElementRange<const Element>{container};
     }
 
     /**
@@ -149,7 +189,7 @@ namespace adm {
      */
     template <typename Element, typename Container>
     ElementRange<Element> makeElementRange(Container &container) {
-      return {container.cbegin(), container.cend()};
+      return ElementRange<Element>{container};
     }
 
     template <typename Element, typename Container>

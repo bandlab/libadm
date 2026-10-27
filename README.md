@@ -19,12 +19,16 @@ started.
 ## Boost-free C++20 BandLab fork
 
 This fork keeps the `adm` target and namespace but requires C++20 and no Boost.
-Public `boost::optional`/`variant`/range types are now their `std` equivalents,
-so consumers must rebuild. `adm/utilities/time_conversion.hpp` is removed; use
+Public `boost::optional`/`variant` types now use `std`, and ranges use `std::span`
+with a pointer-converting iterator for const elements, so consumers must rebuild.
+This avoids `std::ranges::view_interface`, which fails to compile with Clang 14
+and libstdc++ 11. `adm/utilities/time_conversion.hpp` is removed; use
 `Time::asFractional()`, `FractionalTime::normalised()` and
-`FractionalTime::operator-`. Const element ranges are `std::ranges` views:
-compare them with `std::ranges::equal`, and keep the view alive while using its
-iterators.
+`FractionalTime::operator-`. Const element ranges provide forward iterators and
+constant-time indexed access on the range. Compare ranges with
+`std::ranges::equal`. Ranges and their iterators borrow the underlying container;
+container destruction or
+iterator-invalidating modifications invalidate them.
 
 ### Generic XML
 
