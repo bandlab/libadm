@@ -13,7 +13,7 @@ namespace adm {
     /// Converts a pointer to a pointer to const.
     template <typename Pointer>
     struct ConstPointer {
-      const Pointer operator()(const auto& pointer) const { return pointer; }
+      const Pointer operator()(const auto &pointer) const { return pointer; }
     };
 
     /// Range over `std::shared_ptr<Element>`.

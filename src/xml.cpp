@@ -23,7 +23,8 @@ namespace adm::xml {
     }
 
     Node* findElement(Node* node, std::string_view localName) {
-      if (localName.empty()) throw std::invalid_argument("empty XML element name");
+      if (localName.empty())
+        throw std::invalid_argument("empty XML element name");
       for (; node; node = node->next_sibling())
         if (node->type() == rapidxml::node_element &&
             localNameOf(node) == localName)
@@ -103,7 +104,8 @@ namespace adm::xml {
   }
   std::optional<std::string_view> DomNode::attributeValue(
       std::string_view localName) const {
-    if (localName.empty()) throw std::invalid_argument("empty XML attribute name");
+    if (localName.empty())
+      throw std::invalid_argument("empty XML attribute name");
     for (auto* attr = requireNode(node_)->first_attribute(); attr;
          attr = attr->next_attribute())
       if (localNameOf(attr) == localName)

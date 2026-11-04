@@ -75,14 +75,10 @@ TEST_CASE("Time Fractional") {
 TEST_CASE("FractionalTime subtraction") {
   REQUIRE(FractionalTime{1, 48000} - FractionalTime{1, 96000} ==
           FractionalTime{1, 96000});
-  REQUIRE(FractionalTime{1, 3} - FractionalTime{1, 2} ==
-          FractionalTime{-1, 6});
-  REQUIRE(FractionalTime{6, 8} - FractionalTime{2, 8} ==
-          FractionalTime{1, 2});
-  REQUIRE(FractionalTime{1, 2} - FractionalTime{2, 4} ==
-          FractionalTime{0, 1});
-  REQUIRE(FractionalTime{1, 3} - FractionalTime{-1, 2} ==
-          FractionalTime{5, 6});
+  REQUIRE(FractionalTime{1, 3} - FractionalTime{1, 2} == FractionalTime{-1, 6});
+  REQUIRE(FractionalTime{6, 8} - FractionalTime{2, 8} == FractionalTime{1, 2});
+  REQUIRE(FractionalTime{1, 2} - FractionalTime{2, 4} == FractionalTime{0, 1});
+  REQUIRE(FractionalTime{1, 3} - FractionalTime{-1, 2} == FractionalTime{5, 6});
   REQUIRE(FractionalTime{1, 6000000000} - FractionalTime{1, 4000000000} ==
           FractionalTime{-1, 12000000000});
 }

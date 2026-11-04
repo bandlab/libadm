@@ -38,8 +38,7 @@ namespace adm {
     const auto numerator = left - right;
     const auto reduction = std::gcd(numerator, divisor);
     return {numerator / reduction,
-            multiply(a.denominator() / divisor,
-                     b.denominator() / reduction)};
+            multiply(a.denominator() / divisor, b.denominator() / reduction)};
   }
 
   struct AsNanosecondsVisitor {
