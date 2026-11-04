@@ -61,8 +61,9 @@ namespace adm {
     /// Creates a range to const elements.
     template <typename Element, typename Container>
     ElementRange<const Element> makeElementRange(const Container &container) {
-      return {std::ranges::subrange(container.cbegin(), container.cend()),
-              ConstPointer<std::shared_ptr<const Element>>{}};
+      return ElementRange<const Element>{
+          std::ranges::subrange(container.cbegin(), container.cend()),
+          ConstPointer<std::shared_ptr<const Element>>{}};
     }
 
     /// Creates a range to mutable elements.
