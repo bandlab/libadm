@@ -136,44 +136,54 @@ namespace adm {
   BlockFormatsConstRange<AudioBlockFormatDirectSpeakers>
   AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatDirectSpeakers>::tag) const {
-    return audioBlockFormatsDirectSpeakers_;
+    return std::ranges::subrange(audioBlockFormatsDirectSpeakers_.begin(),
+                                 audioBlockFormatsDirectSpeakers_.end());
   }
   BlockFormatsConstRange<AudioBlockFormatMatrix> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatMatrix>::tag) const {
-    return audioBlockFormatsMatrix_;
+    return std::ranges::subrange(audioBlockFormatsMatrix_.begin(),
+                                 audioBlockFormatsMatrix_.end());
   }
   BlockFormatsConstRange<AudioBlockFormatObjects> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatObjects>::tag) const {
-    return audioBlockFormatsObjects_;
+    return std::ranges::subrange(audioBlockFormatsObjects_.begin(),
+                                 audioBlockFormatsObjects_.end());
   }
   BlockFormatsConstRange<AudioBlockFormatHoa> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatHoa>::tag) const {
-    return audioBlockFormatsHoa_;
+    return std::ranges::subrange(audioBlockFormatsHoa_.begin(),
+                                 audioBlockFormatsHoa_.end());
   }
   BlockFormatsConstRange<AudioBlockFormatBinaural> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatBinaural>::tag) const {
-    return audioBlockFormatsBinaural_;
+    return std::ranges::subrange(audioBlockFormatsBinaural_.begin(),
+                                 audioBlockFormatsBinaural_.end());
   }
 
   BlockFormatsRange<AudioBlockFormatDirectSpeakers> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatDirectSpeakers>::tag) {
-    return audioBlockFormatsDirectSpeakers_;
+    return std::ranges::subrange(audioBlockFormatsDirectSpeakers_.begin(),
+                                 audioBlockFormatsDirectSpeakers_.end());
   }
   BlockFormatsRange<AudioBlockFormatMatrix> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatMatrix>::tag) {
-    return audioBlockFormatsMatrix_;
+    return std::ranges::subrange(audioBlockFormatsMatrix_.begin(),
+                                 audioBlockFormatsMatrix_.end());
   }
   BlockFormatsRange<AudioBlockFormatObjects> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatObjects>::tag) {
-    return audioBlockFormatsObjects_;
+    return std::ranges::subrange(audioBlockFormatsObjects_.begin(),
+                                 audioBlockFormatsObjects_.end());
   }
   BlockFormatsRange<AudioBlockFormatHoa> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatHoa>::tag) {
-    return audioBlockFormatsHoa_;
+    return std::ranges::subrange(audioBlockFormatsHoa_.begin(),
+                                 audioBlockFormatsHoa_.end());
   }
   BlockFormatsRange<AudioBlockFormatBinaural> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatBinaural>::tag) {
-    return audioBlockFormatsBinaural_;
+    return std::ranges::subrange(audioBlockFormatsBinaural_.begin(),
+                                 audioBlockFormatsBinaural_.end());
   }
 
   void AudioChannelFormat::clearAudioBlockFormats() {

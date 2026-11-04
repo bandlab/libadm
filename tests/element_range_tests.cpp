@@ -12,8 +12,11 @@ namespace {
   using WeakRange = adm::ElementWeakRange<const int>;
 
   static_assert(std::ranges::random_access_range<MutableRange>);
-  static_assert(std::ranges::forward_range<const ConstRange>);
-  static_assert(std::ranges::forward_range<const WeakRange>);
+  static_assert(std::ranges::random_access_range<const ConstRange>);
+  static_assert(std::ranges::random_access_range<const WeakRange>);
+  static_assert(std::ranges::sized_range<const ConstRange>);
+  static_assert(std::ranges::borrowed_range<MutableRange>);
+  static_assert(!std::ranges::borrowed_range<ConstRange>);
   static_assert(std::is_same_v<decltype(*std::declval<MutableRange>().begin()),
                                const std::shared_ptr<int>&>);
   static_assert(std::is_same_v<decltype(*std::declval<ConstRange>().begin()),
@@ -61,10 +64,10 @@ TEST_CASE("element_ranges_borrow_pointers_and_preserve_constness") {
   REQUIRE(std::distance(range.begin(), range.end()) == 3);
   REQUIRE(std::find(range.begin(), range.end(), elements[2]) == it);
   REQUIRE(++it == range.end());
+  REQUIRE(range.end() - range.begin() == 3);
+  REQUIRE(range.begin()[2] == elements[2]);
 
-  // Iterators refer to the container, not to a temporary range object.
-  auto borrowed =
-      adm::detail::makeElementRange<int>(std::as_const(elements)).begin();
+  auto borrowed = adm::detail::makeElementRange<int>(elements).begin();
   REQUIRE(*borrowed == elements[0]);
 }
 
@@ -84,7 +87,9 @@ TEST_CASE("element_ranges_allow_empty_containers") {
 TEST_CASE("const_weak_element_ranges_do_not_retain_elements") {
   auto element = std::make_shared<int>(42);
   std::vector<std::weak_ptr<int>> elements{element, {}};
-  const WeakRange range{elements};
+  const WeakRange range{
+      std::ranges::subrange(elements.cbegin(), elements.cend()),
+      adm::detail::ConstPointer<std::weak_ptr<const int>>{}};
   REQUIRE(range.size() == 2);
   REQUIRE(range.front().lock() == element);
   REQUIRE(range.back().expired());
