@@ -123,8 +123,10 @@ namespace adm {
 
   ElementWeakRange<const AudioTrackFormat>
   AudioStreamFormat::getAudioTrackFormatReferences() const {
-    return ElementWeakRange<const AudioTrackFormat>(audioTrackFormats_.begin(),
-                                                    audioTrackFormats_.end());
+    return ElementWeakRange<const AudioTrackFormat>{
+        std::ranges::subrange(audioTrackFormats_.cbegin(),
+                              audioTrackFormats_.cend()),
+        detail::ConstPointer<std::weak_ptr<const AudioTrackFormat>>{}};
   }
 
   ElementWeakRange<AudioTrackFormat>

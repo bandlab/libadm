@@ -9,12 +9,11 @@ namespace adm {
   // ---- Getter ---- //
   ChannelLockFlag ChannelLock::get(
       detail::ParameterTraits<ChannelLockFlag>::tag) const {
-    return boost::get_optional_value_or(channelLockFlag_,
-                                        channelLockFlagDefault_);
+    return channelLockFlag_.value_or(channelLockFlagDefault_);
   }
   MaxDistance ChannelLock::get(
       detail::ParameterTraits<MaxDistance>::tag) const {
-    return maxDistance_.get();
+    return maxDistance_.value();
   }
 
   // ---- Has ---- //
@@ -22,13 +21,13 @@ namespace adm {
     return true;
   }
   bool ChannelLock::has(detail::ParameterTraits<MaxDistance>::tag) const {
-    return maxDistance_ != boost::none;
+    return maxDistance_ != std::nullopt;
   }
 
   // ---- isDefault ---- //
   bool ChannelLock::isDefault(
       detail::ParameterTraits<ChannelLockFlag>::tag) const {
-    return channelLockFlag_ == boost::none;
+    return channelLockFlag_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -39,10 +38,10 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void ChannelLock::unset(detail::ParameterTraits<ChannelLockFlag>::tag) {
-    channelLockFlag_ = boost::none;
+    channelLockFlag_ = std::nullopt;
   }
   void ChannelLock::unset(detail::ParameterTraits<MaxDistance>::tag) {
-    maxDistance_ = boost::none;
+    maxDistance_ = std::nullopt;
   }
 
   // ---- Free Functions ---- //

@@ -12,6 +12,7 @@ namespace adm {
   class FrameHeader;
 
   namespace xml {
+    class DomDocument;
     /**
      * @brief Representation of available options to influence the behaviour
      * of the XML parser.
@@ -73,6 +74,11 @@ namespace adm {
    */
   ADM_EXPORT std::shared_ptr<Document> parseXml(
       std::istream& stream,
+      xml::ParserOptions options = xml::ParserOptions::none);
+
+  /// Build the ADM model from an already parsed DOM without parsing XML again.
+  ADM_EXPORT std::shared_ptr<Document> parseXml(
+      xml::DomDocument& document,
       xml::ParserOptions options = xml::ParserOptions::none);
 
   /**

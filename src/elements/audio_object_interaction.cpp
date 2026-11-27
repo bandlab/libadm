@@ -9,19 +9,19 @@ namespace adm {
   }
   GainInteract AudioObjectInteraction::get(
       detail::ParameterTraits<GainInteract>::tag) const {
-    return gainInteract_.get();
+    return gainInteract_.value();
   }
   PositionInteract AudioObjectInteraction::get(
       detail::ParameterTraits<PositionInteract>::tag) const {
-    return positionInteract_.get();
+    return positionInteract_.value();
   }
   GainInteractionRange AudioObjectInteraction::get(
       detail::ParameterTraits<GainInteractionRange>::tag) const {
-    return gainInteractionRange_.get();
+    return gainInteractionRange_.value();
   }
   PositionInteractionRange AudioObjectInteraction::get(
       detail::ParameterTraits<PositionInteractionRange>::tag) const {
-    return positionInteractionRange_.get();
+    return positionInteractionRange_.value();
   }
 
   // ---- Has ---- //
@@ -31,19 +31,19 @@ namespace adm {
   }
   bool AudioObjectInteraction::has(
       detail::ParameterTraits<GainInteract>::tag) const {
-    return gainInteract_ != boost::none;
+    return gainInteract_ != std::nullopt;
   }
   bool AudioObjectInteraction::has(
       detail::ParameterTraits<PositionInteract>::tag) const {
-    return positionInteract_ != boost::none;
+    return positionInteract_ != std::nullopt;
   }
   bool AudioObjectInteraction::has(
       detail::ParameterTraits<GainInteractionRange>::tag) const {
-    return gainInteractionRange_ != boost::none;
+    return gainInteractionRange_ != std::nullopt;
   }
   bool AudioObjectInteraction::has(
       detail::ParameterTraits<PositionInteractionRange>::tag) const {
-    return positionInteractionRange_ != boost::none;
+    return positionInteractionRange_ != std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -67,19 +67,19 @@ namespace adm {
   // ---- Unsetter ---- //
   void AudioObjectInteraction::unset(
       detail::ParameterTraits<GainInteract>::tag) {
-    gainInteract_ = boost::none;
+    gainInteract_ = std::nullopt;
   }
   void AudioObjectInteraction::unset(
       detail::ParameterTraits<PositionInteract>::tag) {
-    positionInteract_ = boost::none;
+    positionInteract_ = std::nullopt;
   }
   void AudioObjectInteraction::unset(
       detail::ParameterTraits<GainInteractionRange>::tag) {
-    gainInteractionRange_ = boost::none;
+    gainInteractionRange_ = std::nullopt;
   }
   void AudioObjectInteraction::unset(
       detail::ParameterTraits<PositionInteractionRange>::tag) {
-    positionInteractionRange_ = boost::none;
+    positionInteractionRange_ = std::nullopt;
   }
 
 }  // namespace adm

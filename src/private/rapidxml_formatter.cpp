@@ -549,7 +549,7 @@ namespace adm {
     void formatPosition(XmlNode &parentNode, const std::string &name,
                         const Position &position) {
       if (isSpherical(position)) {
-        auto sphericalPosition = boost::get<SphericalPosition>(position);
+        auto sphericalPosition = std::get<SphericalPosition>(position);
         parentNode.addElement(
             sphericalPosition.get<Azimuth>(), name,
             detail::formatMultiElementAttribute("coordinate", "azimuth"));
@@ -560,7 +560,7 @@ namespace adm {
             &sphericalPosition, name,
             detail::formatMultiElementAttribute("coordinate", "distance"));
       } else {
-        auto cartesianPosition = boost::get<CartesianPosition>(position);
+        auto cartesianPosition = std::get<CartesianPosition>(position);
         parentNode.addElement(
             cartesianPosition.get<X>(), name,
             detail::formatMultiElementAttribute("coordinate", "X"));
@@ -586,7 +586,7 @@ namespace adm {
                               const PositionOffset &positionOffset) {
       if (isSpherical(positionOffset)) {
         auto sphericalPosition =
-            boost::get<SphericalPositionOffset>(positionOffset);
+            std::get<SphericalPositionOffset>(positionOffset);
         parentNode.addOptionalElement<AzimuthOffset>(
             &sphericalPosition, name,
             detail::formatMultiElementAttribute("coordinate", "azimuth"));
@@ -598,7 +598,7 @@ namespace adm {
             detail::formatMultiElementAttribute("coordinate", "distance"));
       } else {
         auto cartesianPosition =
-            boost::get<CartesianPositionOffset>(positionOffset);
+            std::get<CartesianPositionOffset>(positionOffset);
         parentNode.addOptionalElement<XOffset>(
             &cartesianPosition, name,
             detail::formatMultiElementAttribute("coordinate", "X"));

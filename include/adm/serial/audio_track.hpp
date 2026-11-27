@@ -7,8 +7,8 @@
 #include "adm/detail/named_option_helper.hpp"
 #include "adm/detail/named_type.hpp"
 #include "adm/export.h"
-#include <boost/optional.hpp>
-#include <boost/range/iterator_range_core.hpp>
+#include <optional>
+#include <ranges>
 #include <memory>
 #include <vector>
 

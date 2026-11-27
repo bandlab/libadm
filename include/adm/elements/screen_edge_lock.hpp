@@ -1,7 +1,7 @@
 /// @file screen_edge_lock.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include "adm/detail/named_type.hpp"
 #include "adm/detail/named_option_helper.hpp"
 #include "adm/export.h"
@@ -121,8 +121,8 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<HorizontalEdge>::tag);
     ADM_EXPORT void unset(detail::ParameterTraits<VerticalEdge>::tag);
 
-    boost::optional<HorizontalEdge> horizontal_;
-    boost::optional<VerticalEdge> vertical_;
+    std::optional<HorizontalEdge> horizontal_;
+    std::optional<VerticalEdge> vertical_;
   };
 
   // ---- Implementation ---- //

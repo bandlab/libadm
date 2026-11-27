@@ -13,13 +13,11 @@ namespace adm {
   // ---- Getter ---- //
   JumpPositionFlag JumpPosition::get(
       detail::ParameterTraits<JumpPositionFlag>::tag) const {
-    return boost::get_optional_value_or(jumpPositionFlag_,
-                                        jumpPositionFlagDefault_);
+    return jumpPositionFlag_.value_or(jumpPositionFlagDefault_);
   }
   InterpolationLength JumpPosition::get(
       detail::ParameterTraits<InterpolationLength>::tag) const {
-    return boost::get_optional_value_or(interpolationLength_,
-                                        interpolationLengthDefault_);
+    return interpolationLength_.value_or(interpolationLengthDefault_);
   }
 
   // ---- Has ---- //
@@ -34,11 +32,11 @@ namespace adm {
   // ---- isDefault ---- //
   bool JumpPosition::isDefault(
       detail::ParameterTraits<JumpPositionFlag>::tag) const {
-    return jumpPositionFlag_ == boost::none;
+    return jumpPositionFlag_ == std::nullopt;
   }
   bool JumpPosition::isDefault(
       detail::ParameterTraits<InterpolationLength>::tag) const {
-    return interpolationLength_ == boost::none;
+    return interpolationLength_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -51,10 +49,10 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void JumpPosition::unset(detail::ParameterTraits<JumpPositionFlag>::tag) {
-    jumpPositionFlag_ = boost::none;
+    jumpPositionFlag_ = std::nullopt;
   }
   void JumpPosition::unset(detail::ParameterTraits<InterpolationLength>::tag) {
-    interpolationLength_ = boost::none;
+    interpolationLength_ = std::nullopt;
   }
 
   // ---- Free Functions ---- //

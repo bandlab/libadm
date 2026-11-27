@@ -1,7 +1,7 @@
 #pragma once
 
 #include <algorithm>
-#include <boost/variant.hpp>
+#include <variant>
 #include <unordered_map>
 #include <memory>
 #include "adm/elements.hpp"
@@ -13,7 +13,7 @@ namespace adm {
       std::shared_ptr<const Document> document);
 
   template <typename C>
-  class AddTo : public boost::static_visitor<> {
+  class AddTo {
    public:
     explicit AddTo(C& target) : target_(target) {}
 
@@ -37,7 +37,7 @@ namespace adm {
   void addElements(std::vector<ElementVariant> elements,
                    std::shared_ptr<Target> target) {
     for (auto& element : elements) {
-      boost::apply_visitor(visitor::addTo(target), element);
+      std::visit(visitor::addTo(target), element);
     }
   }
 

@@ -7,6 +7,12 @@
 
 namespace adm {
   class FrameHeader;
+  std::shared_ptr<Document> parseXml(xml::DomDocument& document,
+                                     xml::ParserOptions options) {
+    xml::DocumentParser parser(document.root(), options,
+                               getCommonDefinitions());
+    return parser.parse();
+  }
   std::shared_ptr<Document> parseXml(const std::string& filename,
                                      xml::ParserOptions options) {
     auto commonDefinitions = getCommonDefinitions();

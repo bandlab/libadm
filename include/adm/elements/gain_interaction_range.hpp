@@ -1,8 +1,8 @@
 /// @file gain_interaction_range.hpp
 #pragma once
 
-#include <boost/optional.hpp>
-#include <boost/variant.hpp>
+#include <optional>
+#include <variant>
 #include <cmath>
 #include <iosfwd>
 #include "adm/elements/position_types.hpp"
@@ -122,8 +122,8 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<GainInteractionMin>::tag);
     ADM_EXPORT void unset(detail::ParameterTraits<GainInteractionMax>::tag);
 
-    boost::optional<GainInteractionMin> gainMin_;
-    boost::optional<GainInteractionMax> gainMax_;
+    std::optional<GainInteractionMin> gainMin_;
+    std::optional<GainInteractionMax> gainMax_;
   };
 
   // ---- Implementation ---- //

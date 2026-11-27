@@ -18,8 +18,8 @@ TEST_CASE("audio_programme parameters") {
   }
   SECTION("AudioProgrammeId") {
     check_required_param<AudioProgrammeId>(
-        audioProgramme, hasDefaultOf(AudioProgrammeIdValue{}),
-        canBeSetTo(AudioProgrammeIdValue(2u)));
+        audioProgramme, hasDefaultOf(AudioProgrammeId{}),
+        canBeSetTo(AudioProgrammeId(AudioProgrammeIdValue(2u))));
   }
   SECTION("AudioProgrammeLanguage") {
     check_optional_param<AudioProgrammeLanguage>(audioProgramme,

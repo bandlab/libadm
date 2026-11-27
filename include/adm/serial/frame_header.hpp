@@ -8,7 +8,7 @@
 #include "adm/detail/auto_base.hpp"
 #include "adm/elements/profile_list.hpp"
 #include "adm/export.h"
-#include <boost/range/iterator_range_core.hpp>
+#include <ranges>
 #include <memory>
 #include <vector>
 

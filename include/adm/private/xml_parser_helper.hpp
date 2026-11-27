@@ -1,5 +1,5 @@
 #pragma once
-#include <boost/optional.hpp>
+#include <optional>
 #include <functional>
 #include <map>
 #include <sstream>
@@ -118,11 +118,11 @@ namespace adm {
 
     // ---- attributes ---- //
     template <typename NT, typename Callable>
-    boost::optional<NT> parseOptionalAttribute(NodePtr node,
-                                               const char* attributeName,
-                                               Callable parser) {
+    std::optional<NT> parseOptionalAttribute(NodePtr node,
+                                             const char* attributeName,
+                                             Callable parser) {
       auto attribute = node->first_attribute(attributeName);
-      boost::optional<NT> value;
+      std::optional<NT> value;
       if (attribute) {
         value = NT(parser(attribute->value()));
         /*
@@ -130,7 +130,7 @@ namespace adm {
           value = NT(parser(attribute->value()));
         } catch (...) {
           errorHandler(FATAL_ERROR, e.what());
-          return boost::none;
+          return std::nullopt;
         }
         */
       }
@@ -138,8 +138,8 @@ namespace adm {
     }
 
     template <typename NT>
-    boost::optional<NT> parseOptionalAttribute(NodePtr node,
-                                               const char* attributeName) {
+    std::optional<NT> parseOptionalAttribute(NodePtr node,
+                                             const char* attributeName) {
       return parseOptionalAttribute<NT>(node, attributeName,
                                         detail::parseDefault<NT>);
     }
@@ -148,8 +148,8 @@ namespace adm {
     NT parseAttribute(NodePtr node, const char* attributeName,
                       Callable parser) {
       auto value = parseOptionalAttribute<NT>(node, attributeName, parser);
-      if (value != boost::none) {
-        return std::move(value.get());
+      if (value != std::nullopt) {
+        return std::move(value.value());
       } else {
         std::stringstream errorString;
         int errorLine = getDocumentLine(node);
@@ -169,8 +169,8 @@ namespace adm {
     void setOptionalAttribute(NodePtr node, const char* attributeName,
                               Target& target, Callable parser) {
       auto value = parseOptionalAttribute<NT>(node, attributeName, parser);
-      if (value != boost::none) {
-        detail::invokeSet(target, std::move(value.get()));
+      if (value != std::nullopt) {
+        detail::invokeSet(target, std::move(value.value()));
       }
     }
 
@@ -183,11 +183,11 @@ namespace adm {
 
     // ---- element ---- //
     template <typename NT, typename Callable>
-    boost::optional<NT> parseOptionalElement(NodePtr node,
-                                             const char* elementName,
-                                             Callable parser) {
+    std::optional<NT> parseOptionalElement(NodePtr node,
+                                           const char* elementName,
+                                           Callable parser) {
       auto element = detail::findElement(node, elementName);
-      boost::optional<NT> value;
+      std::optional<NT> value;
       if (element) {
         value = NT(parser(element));
       }
@@ -197,8 +197,8 @@ namespace adm {
     template <typename NT, typename Target, typename Callable>
     NT parseElement(NodePtr node, const char* elementName, Callable parser) {
       auto value = parseOptionalElement<NT>(node, elementName, parser);
-      if (value != boost::none) {
-        return std::move(value.get());
+      if (value != std::nullopt) {
+        return std::move(value.value());
       } else {
         std::stringstream errorString;
         int errorLine = getDocumentLine(node);
@@ -212,8 +212,8 @@ namespace adm {
     void addOptionalElement(NodePtr node, const char* elementName,
                             Target& target, Callable parser) {
       auto value = parseOptionalElement<NT>(node, elementName, parser);
-      if (value != boost::none) {
-        detail::invokeAdd(target, std::move(value.get()));
+      if (value != std::nullopt) {
+        detail::invokeAdd(target, std::move(value.value()));
       }
     }
 
@@ -230,8 +230,8 @@ namespace adm {
     void setOptionalElement(NodePtr node, const char* elementName,
                             Target& target, Callable parser) {
       auto value = parseOptionalElement<NT>(node, elementName, parser);
-      if (value != boost::none) {
-        detail::invokeSet(target, std::move(value.get()));
+      if (value != std::nullopt) {
+        detail::invokeSet(target, std::move(value.value()));
       }
     }
 
@@ -245,11 +245,11 @@ namespace adm {
     }
 
     template <typename NT, typename Callable>
-    boost::optional<NT> parseOptionalMultiElement(NodePtr node,
-                                                  const char* elementName,
-                                                  Callable parser) {
+    std::optional<NT> parseOptionalMultiElement(NodePtr node,
+                                                const char* elementName,
+                                                Callable parser) {
       auto elements = detail::findElements(node, elementName);
-      boost::optional<NT> value;
+      std::optional<NT> value;
       if (elements.size() > 0) {
         value = NT(parser(elements));
       }
@@ -260,8 +260,8 @@ namespace adm {
     void setOptionalMultiElement(NodePtr node, const char* elementName,
                                  Target& target, Callable parser) {
       auto value = parseOptionalMultiElement<NT>(node, elementName, parser);
-      if (value != boost::none) {
-        detail::invokeSet(target, std::move(value.get()));
+      if (value != std::nullopt) {
+        detail::invokeSet(target, std::move(value.value()));
       }
     }
 
@@ -269,8 +269,8 @@ namespace adm {
     void setMultiElement(NodePtr node, const char* elementName, Target& target,
                          Callable parser) {
       auto value = parseOptionalMultiElement<NT>(node, elementName, parser);
-      if (value != boost::none) {
-        detail::invokeSet(target, std::move(value.get()));
+      if (value != std::nullopt) {
+        detail::invokeSet(target, std::move(value.value()));
       } else {
         std::stringstream errorString;
         int errorLine = getDocumentLine(node);
@@ -330,33 +330,33 @@ namespace adm {
 
     // ---- sanity checks ---- //
     template <typename NT>
-    void checkChannelType(NT id, boost::optional<TypeDescriptor> typeLabel,
-                          boost::optional<TypeDescriptor> typeDefinition) {
-      if (typeDefinition != boost::none &&
-          id.template get<TypeDescriptor>() != typeDefinition.get()) {
+    void checkChannelType(NT id, std::optional<TypeDescriptor> typeLabel,
+                          std::optional<TypeDescriptor> typeDefinition) {
+      if (typeDefinition != std::nullopt &&
+          id.template get<TypeDescriptor>() != typeDefinition.value()) {
         throw std::runtime_error("TypeDefinition and id do not match");
       }
-      if (typeLabel != boost::none &&
-          id.template get<TypeDescriptor>() != typeLabel.get()) {
+      if (typeLabel != std::nullopt &&
+          id.template get<TypeDescriptor>() != typeLabel.value()) {
         throw std::runtime_error("TypeLabel and id do not match");
       }
     }
 
     inline FormatDescriptor checkFormat(
-        boost::optional<FormatDescriptor> formatLabel,
-        boost::optional<FormatDescriptor> formatDefinition) {
-      if (formatLabel != boost::none && formatDefinition != boost::none) {
-        if (formatLabel.get() != formatDefinition.get()) {
+        std::optional<FormatDescriptor> formatLabel,
+        std::optional<FormatDescriptor> formatDefinition) {
+      if (formatLabel != std::nullopt && formatDefinition != std::nullopt) {
+        if (formatLabel.value() != formatDefinition.value()) {
           throw std::runtime_error(
               "formatLabel and formatDefinition do not match");
         }
-        return formatLabel.get();
+        return formatLabel.value();
       }
-      if (formatLabel != boost::none) {
-        return formatLabel.get();
+      if (formatLabel != std::nullopt) {
+        return formatLabel.value();
       }
-      if (formatDefinition != boost::none) {
-        return formatDefinition.get();
+      if (formatDefinition != std::nullopt) {
+        return formatDefinition.value();
       }
       throw std::runtime_error(
           "Neither FormatLabel nor formatDefinition found");

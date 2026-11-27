@@ -1,7 +1,7 @@
 /// @file audio_block_format_binaural.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include "adm/elements/time.hpp"
 #include "adm/elements/audio_block_format_id.hpp"
 #include "adm/elements/common_parameters.hpp"
@@ -146,8 +146,8 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<Duration>::tag);
 
     AudioBlockFormatId id_;
-    boost::optional<Rtime> rtime_;
-    boost::optional<Duration> duration_;
+    std::optional<Rtime> rtime_;
+    std::optional<Duration> duration_;
   };
 
   // ---- Implementation ---- //

@@ -8,6 +8,7 @@
 #include "adm/elements.hpp"
 #include "adm/errors.hpp"
 #include "adm/parse.hpp"
+#include "adm/xml.hpp"
 #include "rapidxml/rapidxml.hpp"
 #include "rapidxml/rapidxml_utils.hpp"
 #include "adm/elements/audio_pack_format_hoa.hpp"
@@ -47,13 +48,13 @@ namespace adm {
         NodePtr node);
     Label parseLabel(NodePtr node);
     AudioBlockFormatObjects parseAudioBlockFormatObjects(
-        NodePtr node, boost::optional<TimeReference> timeReference);
+        NodePtr node, std::optional<TimeReference> timeReference);
     Gain parseGain(NodePtr node);
     ChannelLock parseChannelLock(NodePtr node);
     ObjectDivergence parseObjectDivergence(NodePtr node);
     JumpPosition parseJumpPosition(NodePtr node);
     AudioBlockFormatDirectSpeakers parseAudioBlockFormatDirectSpeakers(
-        NodePtr node, boost::optional<TimeReference> timeReference);
+        NodePtr node, std::optional<TimeReference> timeReference);
     SphericalSpeakerPosition parseSphericalSpeakerPosition(
         const std::vector<std::pair<NodePtr, SphericalCoordinateValue>>&
             sphericalCoordinates);
@@ -65,9 +66,9 @@ namespace adm {
     SpeakerLabel parseSpeakerLabel(NodePtr node);
     HeadphoneVirtualise parseHeadphoneVirtualise(NodePtr node);
     AudioBlockFormatHoa parseAudioBlockFormatHoa(
-        NodePtr node, boost::optional<TimeReference> timeReference);
+        NodePtr node, std::optional<TimeReference> timeReference);
     AudioBlockFormatBinaural parseAudioBlockFormatBinaural(
-        NodePtr node, boost::optional<TimeReference> timeReference);
+        NodePtr node, std::optional<TimeReference> timeReference);
     Profile parseProfile(NodePtr node);
     ProfileList parseProfileList(NodePtr node);
 
@@ -86,6 +87,8 @@ namespace adm {
           std::shared_ptr<Document> destDocument = Document::create());
 
       void setHeader(FrameHeader header);
+      explicit DocumentParser(DomNode root, ParserOptions options,
+                              std::shared_ptr<Document> destDocument);
       std::shared_ptr<Document> parse();
 
       bool hasUnresolvedReferences();
@@ -95,7 +98,7 @@ namespace adm {
           rapidxml::file<> file, ParserOptions options = ParserOptions::none,
           std::shared_ptr<Document> destDocument = Document::create());
 
-      boost::optional<TimeReference> getTimeReference() const;
+      std::optional<TimeReference> getTimeReference() const;
 
       std::shared_ptr<AudioProgramme> parseAudioProgramme(NodePtr node);
       std::shared_ptr<AudioContent> parseAudioContent(NodePtr node);
@@ -106,10 +109,12 @@ namespace adm {
       std::shared_ptr<AudioTrackUid> parseAudioTrackUid(NodePtr node);
       std::shared_ptr<AudioChannelFormat> parseAudioChannelFormat(NodePtr node);
 
-      rapidxml::file<> xmlFile_;
+      std::optional<rapidxml::file<>> xmlFile_;
+      NodePtr parsedRoot_ = nullptr;
+      std::shared_ptr<Document> parse(NodePtr firstNode);
       ParserOptions options_;
       std::shared_ptr<Document> document_;
-      boost::optional<FrameHeader> frameHeader_;
+      std::optional<FrameHeader> frameHeader_;
 
       // clang-format off
       std::map<std::shared_ptr<AudioProgramme>, std::vector<AudioContentId>> programmeContentRefs_;

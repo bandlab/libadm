@@ -11,74 +11,74 @@ namespace adm {
   // ---- Getter ---- //
   LoudnessMethod LoudnessMetadata::get(
       detail::ParameterTraits<LoudnessMethod>::tag) const {
-    return loudnessMethod_.get();
+    return loudnessMethod_.value();
   }
   LoudnessRecType LoudnessMetadata::get(
       detail::ParameterTraits<LoudnessRecType>::tag) const {
-    return loudnessRecType_.get();
+    return loudnessRecType_.value();
   }
   LoudnessCorrectionType LoudnessMetadata::get(
       detail::ParameterTraits<LoudnessCorrectionType>::tag) const {
-    return loudnessCorrectionType_.get();
+    return loudnessCorrectionType_.value();
   }
   IntegratedLoudness LoudnessMetadata::get(
       detail::ParameterTraits<IntegratedLoudness>::tag) const {
-    return integratedLoudness_.get();
+    return integratedLoudness_.value();
   }
   LoudnessRange LoudnessMetadata::get(
       detail::ParameterTraits<LoudnessRange>::tag) const {
-    return loudnessRange_.get();
+    return loudnessRange_.value();
   }
   MaxTruePeak LoudnessMetadata::get(
       detail::ParameterTraits<MaxTruePeak>::tag) const {
-    return maxTruePeak_.get();
+    return maxTruePeak_.value();
   }
   MaxMomentary LoudnessMetadata::get(
       detail::ParameterTraits<MaxMomentary>::tag) const {
-    return maxMomentary_.get();
+    return maxMomentary_.value();
   }
   MaxShortTerm LoudnessMetadata::get(
       detail::ParameterTraits<MaxShortTerm>::tag) const {
-    return maxShortTerm_.get();
+    return maxShortTerm_.value();
   }
   DialogueLoudness LoudnessMetadata::get(
       detail::ParameterTraits<DialogueLoudness>::tag) const {
-    return dialogueLoudness_.get();
+    return dialogueLoudness_.value();
   }
 
   // ---- Has ---- //
   bool LoudnessMetadata::has(
       detail::ParameterTraits<LoudnessMethod>::tag) const {
-    return loudnessMethod_ != boost::none;
+    return loudnessMethod_ != std::nullopt;
   }
   bool LoudnessMetadata::has(
       detail::ParameterTraits<LoudnessRecType>::tag) const {
-    return loudnessRecType_ != boost::none;
+    return loudnessRecType_ != std::nullopt;
   }
   bool LoudnessMetadata::has(
       detail::ParameterTraits<LoudnessCorrectionType>::tag) const {
-    return loudnessCorrectionType_ != boost::none;
+    return loudnessCorrectionType_ != std::nullopt;
   }
   bool LoudnessMetadata::has(
       detail::ParameterTraits<IntegratedLoudness>::tag) const {
-    return integratedLoudness_ != boost::none;
+    return integratedLoudness_ != std::nullopt;
   }
   bool LoudnessMetadata::has(
       detail::ParameterTraits<LoudnessRange>::tag) const {
-    return loudnessRange_ != boost::none;
+    return loudnessRange_ != std::nullopt;
   }
   bool LoudnessMetadata::has(detail::ParameterTraits<MaxTruePeak>::tag) const {
-    return maxTruePeak_ != boost::none;
+    return maxTruePeak_ != std::nullopt;
   }
   bool LoudnessMetadata::has(detail::ParameterTraits<MaxMomentary>::tag) const {
-    return maxMomentary_ != boost::none;
+    return maxMomentary_ != std::nullopt;
   }
   bool LoudnessMetadata::has(detail::ParameterTraits<MaxShortTerm>::tag) const {
-    return maxShortTerm_ != boost::none;
+    return maxShortTerm_ != std::nullopt;
   }
   bool LoudnessMetadata::has(
       detail::ParameterTraits<DialogueLoudness>::tag) const {
-    return dialogueLoudness_ != boost::none;
+    return dialogueLoudness_ != std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -112,33 +112,33 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void LoudnessMetadata::unset(detail::ParameterTraits<LoudnessMethod>::tag) {
-    loudnessMethod_ = boost::none;
+    loudnessMethod_ = std::nullopt;
   }
   void LoudnessMetadata::unset(detail::ParameterTraits<LoudnessRecType>::tag) {
-    loudnessRecType_ = boost::none;
+    loudnessRecType_ = std::nullopt;
   }
   void LoudnessMetadata::unset(
       detail::ParameterTraits<LoudnessCorrectionType>::tag) {
-    loudnessCorrectionType_ = boost::none;
+    loudnessCorrectionType_ = std::nullopt;
   }
   void LoudnessMetadata::unset(
       detail::ParameterTraits<IntegratedLoudness>::tag) {
-    integratedLoudness_ = boost::none;
+    integratedLoudness_ = std::nullopt;
   }
   void LoudnessMetadata::unset(detail::ParameterTraits<LoudnessRange>::tag) {
-    loudnessRange_ = boost::none;
+    loudnessRange_ = std::nullopt;
   }
   void LoudnessMetadata::unset(detail::ParameterTraits<MaxTruePeak>::tag) {
-    maxTruePeak_ = boost::none;
+    maxTruePeak_ = std::nullopt;
   }
   void LoudnessMetadata::unset(detail::ParameterTraits<MaxMomentary>::tag) {
-    maxMomentary_ = boost::none;
+    maxMomentary_ = std::nullopt;
   }
   void LoudnessMetadata::unset(detail::ParameterTraits<MaxShortTerm>::tag) {
-    maxShortTerm_ = boost::none;
+    maxShortTerm_ = std::nullopt;
   }
   void LoudnessMetadata::unset(detail::ParameterTraits<DialogueLoudness>::tag) {
-    dialogueLoudness_ = boost::none;
+    dialogueLoudness_ = std::nullopt;
   }
 
   void LoudnessMetadata::print(std::ostream& os) const {

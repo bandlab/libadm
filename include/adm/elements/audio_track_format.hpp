@@ -8,7 +8,7 @@
 #include "adm/detail/named_option_helper.hpp"
 #include "adm/detail/named_type.hpp"
 #include "adm/export.h"
-#include <boost/optional.hpp>
+#include <optional>
 #include <memory>
 
 namespace adm {

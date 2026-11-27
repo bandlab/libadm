@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 
 ############################################################
 # set global paths
@@ -44,24 +44,6 @@ if(WIN32 AND NOT CYGWIN)
   set(ADM_INSTALL_CMAKE_DIR CMake CACHE PATH "Installation directory for CMake files")
 else()
   set(ADM_INSTALL_CMAKE_DIR share/cmake/adm CACHE PATH "Installation directory for CMake files")
-endif()
-
-# ############################################################
-# # find libraries
-# ############################################################
-# find_package(Boost 1.57 REQUIRED)
-
-############################################################
-# Boost (header-only subset, vendored in ./boost)
-############################################################
-# This fork bundles the minimal header-only Boost subset libadm needs (pinned to
-# a known-good version), so consumers do not need a system Boost or any
-# find_package(Boost). The committed src/CMakeLists.txt links Boost::boost, so we
-# provide that target from the bundled headers. (Regenerate via scripts/vendor_boost_subset.sh.)
-if(NOT TARGET Boost::boost)
-  add_library(Boost::boost INTERFACE IMPORTED)
-  set_target_properties(Boost::boost PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/boost")
 endif()
 
 ############################################################

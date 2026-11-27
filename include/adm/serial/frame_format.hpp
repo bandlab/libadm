@@ -3,8 +3,8 @@
 
 #include <memory>
 #include <chrono>
-#include <boost/optional.hpp>
-#include <boost/variant.hpp>
+#include <optional>
+#include <variant>
 #include "adm/elements/time.hpp"
 #include "adm/serial/frame_format_id.hpp"
 #include "adm/serial/changed_ids.hpp"

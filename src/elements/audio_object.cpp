@@ -37,27 +37,27 @@ namespace adm {
     return name_;
   }
   Start AudioObject::get(detail::ParameterTraits<Start>::tag) const {
-    return boost::get_optional_value_or(start_, startDefault);
+    return start_.value_or(startDefault);
   }
   Duration AudioObject::get(detail::ParameterTraits<Duration>::tag) const {
-    return duration_.get();
+    return duration_.value();
   }
   DialogueId AudioObject::get(detail::ParameterTraits<DialogueId>::tag) const {
-    return dialogueId_.get();
+    return dialogueId_.value();
   }
   Importance AudioObject::get(detail::ParameterTraits<Importance>::tag) const {
-    return importance_.get();
+    return importance_.value();
   }
   Interact AudioObject::get(detail::ParameterTraits<Interact>::tag) const {
-    return interact_.get();
+    return interact_.value();
   }
   DisableDucking AudioObject::get(
       detail::ParameterTraits<DisableDucking>::tag) const {
-    return disableDucking_.get();
+    return disableDucking_.value();
   }
   AudioObjectInteraction AudioObject::get(
       detail::ParameterTraits<AudioObjectInteraction>::tag) const {
-    return audioObjectInteraction_.get();
+    return audioObjectInteraction_.value();
   }
 
   // ---- Has ---- //
@@ -71,28 +71,28 @@ namespace adm {
     return true;
   }
   bool AudioObject::has(detail::ParameterTraits<Duration>::tag) const {
-    return duration_ != boost::none;
+    return duration_ != std::nullopt;
   }
   bool AudioObject::has(detail::ParameterTraits<DialogueId>::tag) const {
-    return dialogueId_ != boost::none;
+    return dialogueId_ != std::nullopt;
   }
   bool AudioObject::has(detail::ParameterTraits<Importance>::tag) const {
-    return importance_ != boost::none;
+    return importance_ != std::nullopt;
   }
   bool AudioObject::has(detail::ParameterTraits<Interact>::tag) const {
-    return interact_ != boost::none;
+    return interact_ != std::nullopt;
   }
   bool AudioObject::has(detail::ParameterTraits<DisableDucking>::tag) const {
-    return disableDucking_ != boost::none;
+    return disableDucking_ != std::nullopt;
   }
   bool AudioObject::has(
       detail::ParameterTraits<AudioObjectInteraction>::tag) const {
-    return audioObjectInteraction_ != boost::none;
+    return audioObjectInteraction_ != std::nullopt;
   }
 
   // ---- isDefault ---- //
   bool AudioObject::isDefault(detail::ParameterTraits<Start>::tag) const {
-    return start_ == boost::none;
+    return start_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -121,26 +121,26 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void AudioObject::unset(detail::ParameterTraits<Start>::tag) {
-    start_ = boost::none;
+    start_ = std::nullopt;
   }
   void AudioObject::unset(detail::ParameterTraits<Duration>::tag) {
-    duration_ = boost::none;
+    duration_ = std::nullopt;
   }
   void AudioObject::unset(detail::ParameterTraits<DialogueId>::tag) {
-    dialogueId_ = boost::none;
+    dialogueId_ = std::nullopt;
   }
   void AudioObject::unset(detail::ParameterTraits<Importance>::tag) {
-    importance_ = boost::none;
+    importance_ = std::nullopt;
   }
   void AudioObject::unset(detail::ParameterTraits<Interact>::tag) {
-    interact_ = boost::none;
+    interact_ = std::nullopt;
   }
   void AudioObject::unset(detail::ParameterTraits<DisableDucking>::tag) {
-    disableDucking_ = boost::none;
+    disableDucking_ = std::nullopt;
   }
   void AudioObject::unset(
       detail::ParameterTraits<AudioObjectInteraction>::tag) {
-    audioObjectInteraction_ = boost::none;
+    audioObjectInteraction_ = std::nullopt;
   }
 
   // ---- References ---- //

@@ -12,15 +12,15 @@ namespace adm {
   // ---- Getter ---- //
   Divergence ObjectDivergence::get(
       detail::ParameterTraits<Divergence>::tag) const {
-    return boost::get_optional_value_or(divergence_, divergenceDefault_);
+    return divergence_.value_or(divergenceDefault_);
   }
   AzimuthRange ObjectDivergence::get(
       detail::ParameterTraits<AzimuthRange>::tag) const {
-    return boost::get_optional_value_or(azimuthRange_, azimuthRangeDefault_);
+    return azimuthRange_.value_or(azimuthRangeDefault_);
   }
   PositionRange ObjectDivergence::get(
       detail::ParameterTraits<PositionRange>::tag) const {
-    return boost::get_optional_value_or(positionRange_, positionRangeDefault_);
+    return positionRange_.value_or(positionRangeDefault_);
   }
 
   // ---- Has ---- //
@@ -38,15 +38,15 @@ namespace adm {
   // ---- isDefault ---- //
   bool ObjectDivergence::isDefault(
       detail::ParameterTraits<Divergence>::tag) const {
-    return divergence_ == boost::none;
+    return divergence_ == std::nullopt;
   }
   bool ObjectDivergence::isDefault(
       detail::ParameterTraits<AzimuthRange>::tag) const {
-    return azimuthRange_ == boost::none;
+    return azimuthRange_ == std::nullopt;
   }
   bool ObjectDivergence::isDefault(
       detail::ParameterTraits<PositionRange>::tag) const {
-    return positionRange_ == boost::none;
+    return positionRange_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -62,13 +62,13 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void ObjectDivergence::unset(detail::ParameterTraits<Divergence>::tag) {
-    divergence_ = boost::none;
+    divergence_ = std::nullopt;
   }
   void ObjectDivergence::unset(detail::ParameterTraits<AzimuthRange>::tag) {
-    azimuthRange_ = boost::none;
+    azimuthRange_ = std::nullopt;
   }
   void ObjectDivergence::unset(detail::ParameterTraits<PositionRange>::tag) {
-    positionRange_ = boost::none;
+    positionRange_ = std::nullopt;
   }
 
 }  // namespace adm

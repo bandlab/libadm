@@ -26,11 +26,11 @@ namespace adm {
 
   Importance AudioPackFormat::get(
       detail::ParameterTraits<Importance>::tag) const {
-    return importance_.get();
+    return importance_.value();
   }
   AbsoluteDistance AudioPackFormat::get(
       detail::ParameterTraits<AbsoluteDistance>::tag) const {
-    return absoluteDistance_.get();
+    return absoluteDistance_.value();
   }
 
   // ---- Setter ---- //
@@ -73,19 +73,19 @@ namespace adm {
     return true;
   }
   bool AudioPackFormat::has(detail::ParameterTraits<Importance>::tag) const {
-    return importance_ != boost::none;
+    return importance_ != std::nullopt;
   }
   bool AudioPackFormat::has(
       detail::ParameterTraits<AbsoluteDistance>::tag) const {
-    return absoluteDistance_ != boost::none;
+    return absoluteDistance_ != std::nullopt;
   }
 
   // ---- Unsetter ---- //
   void AudioPackFormat::unset(detail::ParameterTraits<Importance>::tag) {
-    importance_ = boost::none;
+    importance_ = std::nullopt;
   }
   void AudioPackFormat::unset(detail::ParameterTraits<AbsoluteDistance>::tag) {
-    absoluteDistance_ = boost::none;
+    absoluteDistance_ = std::nullopt;
   }
 
   // ---- References ---- //

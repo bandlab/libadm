@@ -1,7 +1,7 @@
 #pragma once
 
-#include <boost/optional.hpp>
-#include <boost/variant.hpp>
+#include <optional>
+#include <variant>
 #include <cmath>
 #include <iosfwd>
 #include "adm/elements/position_types.hpp"
@@ -138,7 +138,7 @@ namespace adm {
   };
 
   /// @brief Type to hold a SphericalPositionOffset or CartesianPositionOffset
-  typedef boost::variant<SphericalPositionOffset, CartesianPositionOffset>
+  typedef std::variant<SphericalPositionOffset, CartesianPositionOffset>
       PositionOffset;
   ADD_TRAIT(PositionOffset, PositionOffsetTag);
 

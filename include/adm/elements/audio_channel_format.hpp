@@ -2,8 +2,8 @@
 #pragma once
 
 #include <algorithm>
-#include <boost/optional.hpp>
-#include <boost/variant.hpp>
+#include <optional>
+#include <variant>
 #include <memory>
 #include <vector>
 #include "adm/elements/audio_block_format_binaural.hpp"
@@ -31,7 +31,7 @@ namespace adm {
    * @headerfile audio_channel_format.hpp <adm/elements/channel_format.hpp>
    */
   template <typename AudioBlockFormat>
-  using BlockFormatsConstRange = boost::iterator_range<
+  using BlockFormatsConstRange = std::ranges::subrange<
       typename std::vector<AudioBlockFormat>::const_iterator>;
 
   /**
@@ -41,7 +41,7 @@ namespace adm {
    */
   template <typename AudioBlockFormat>
   using BlockFormatsRange =
-      boost::iterator_range<typename std::vector<AudioBlockFormat>::iterator>;
+      std::ranges::subrange<typename std::vector<AudioBlockFormat>::iterator>;
 
   /// @brief Tag for NamedType ::AudioChannelFormatName
   struct AudioChannelFormatNameTag {};
@@ -289,7 +289,7 @@ namespace adm {
     AudioChannelFormatName name_;
     TypeDescriptor typeDescriptor_;
     AudioChannelFormatId id_;
-    boost::optional<Frequency> frequency_;
+    std::optional<Frequency> frequency_;
 
     std::vector<AudioBlockFormatDirectSpeakers>
         audioBlockFormatsDirectSpeakers_;

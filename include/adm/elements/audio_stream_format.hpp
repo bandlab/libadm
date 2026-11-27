@@ -1,7 +1,7 @@
 /// @file audio_stream_format.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <memory>
 #include "adm/elements/audio_channel_format.hpp"
 #include "adm/elements/audio_pack_format.hpp"

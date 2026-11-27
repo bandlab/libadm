@@ -30,7 +30,7 @@ namespace adm {
   Frequency AudioChannelFormat::get(
       detail::ParameterTraits<Frequency>::tag) const {
     if (has<Frequency>()) {
-      return frequency_.get();
+      return frequency_.value();
     } else {
       throw std::runtime_error("optional value for Frequency not set");
     }
@@ -80,12 +80,12 @@ namespace adm {
     return true;
   }
   bool AudioChannelFormat::has(detail::ParameterTraits<Frequency>::tag) const {
-    return frequency_ != boost::none;
+    return frequency_ != std::nullopt;
   }
 
   // ---- Unsetter ---- //
   void AudioChannelFormat::unset(detail::ParameterTraits<Frequency>::tag) {
-    frequency_ = boost::none;
+    frequency_ = std::nullopt;
   }
 
   // ---- AudioBlocks ---- //
@@ -136,54 +136,54 @@ namespace adm {
   BlockFormatsConstRange<AudioBlockFormatDirectSpeakers>
   AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatDirectSpeakers>::tag) const {
-    return boost::make_iterator_range(audioBlockFormatsDirectSpeakers_.begin(),
-                                      audioBlockFormatsDirectSpeakers_.end());
+    return std::ranges::subrange(audioBlockFormatsDirectSpeakers_.begin(),
+                                 audioBlockFormatsDirectSpeakers_.end());
   }
   BlockFormatsConstRange<AudioBlockFormatMatrix> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatMatrix>::tag) const {
-    return boost::make_iterator_range(audioBlockFormatsMatrix_.begin(),
-                                      audioBlockFormatsMatrix_.end());
+    return std::ranges::subrange(audioBlockFormatsMatrix_.begin(),
+                                 audioBlockFormatsMatrix_.end());
   }
   BlockFormatsConstRange<AudioBlockFormatObjects> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatObjects>::tag) const {
-    return boost::make_iterator_range(audioBlockFormatsObjects_.begin(),
-                                      audioBlockFormatsObjects_.end());
+    return std::ranges::subrange(audioBlockFormatsObjects_.begin(),
+                                 audioBlockFormatsObjects_.end());
   }
   BlockFormatsConstRange<AudioBlockFormatHoa> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatHoa>::tag) const {
-    return boost::make_iterator_range(audioBlockFormatsHoa_.begin(),
-                                      audioBlockFormatsHoa_.end());
+    return std::ranges::subrange(audioBlockFormatsHoa_.begin(),
+                                 audioBlockFormatsHoa_.end());
   }
   BlockFormatsConstRange<AudioBlockFormatBinaural> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatBinaural>::tag) const {
-    return boost::make_iterator_range(audioBlockFormatsBinaural_.begin(),
-                                      audioBlockFormatsBinaural_.end());
+    return std::ranges::subrange(audioBlockFormatsBinaural_.begin(),
+                                 audioBlockFormatsBinaural_.end());
   }
 
   BlockFormatsRange<AudioBlockFormatDirectSpeakers> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatDirectSpeakers>::tag) {
-    return boost::make_iterator_range(audioBlockFormatsDirectSpeakers_.begin(),
-                                      audioBlockFormatsDirectSpeakers_.end());
+    return std::ranges::subrange(audioBlockFormatsDirectSpeakers_.begin(),
+                                 audioBlockFormatsDirectSpeakers_.end());
   }
   BlockFormatsRange<AudioBlockFormatMatrix> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatMatrix>::tag) {
-    return boost::make_iterator_range(audioBlockFormatsMatrix_.begin(),
-                                      audioBlockFormatsMatrix_.end());
+    return std::ranges::subrange(audioBlockFormatsMatrix_.begin(),
+                                 audioBlockFormatsMatrix_.end());
   }
   BlockFormatsRange<AudioBlockFormatObjects> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatObjects>::tag) {
-    return boost::make_iterator_range(audioBlockFormatsObjects_.begin(),
-                                      audioBlockFormatsObjects_.end());
+    return std::ranges::subrange(audioBlockFormatsObjects_.begin(),
+                                 audioBlockFormatsObjects_.end());
   }
   BlockFormatsRange<AudioBlockFormatHoa> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatHoa>::tag) {
-    return boost::make_iterator_range(audioBlockFormatsHoa_.begin(),
-                                      audioBlockFormatsHoa_.end());
+    return std::ranges::subrange(audioBlockFormatsHoa_.begin(),
+                                 audioBlockFormatsHoa_.end());
   }
   BlockFormatsRange<AudioBlockFormatBinaural> AudioChannelFormat::get(
       detail::ParameterTraits<AudioBlockFormatBinaural>::tag) {
-    return boost::make_iterator_range(audioBlockFormatsBinaural_.begin(),
-                                      audioBlockFormatsBinaural_.end());
+    return std::ranges::subrange(audioBlockFormatsBinaural_.begin(),
+                                 audioBlockFormatsBinaural_.end());
   }
 
   void AudioChannelFormat::clearAudioBlockFormats() {

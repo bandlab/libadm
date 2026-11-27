@@ -7,79 +7,79 @@ namespace adm {
   // ---- Getter ---- //
   AzimuthInteractionMin PositionInteractionRange::get(
       detail::ParameterTraits<AzimuthInteractionMin>::tag) const {
-    return azimuthMin_.get();
+    return azimuthMin_.value();
   }
   AzimuthInteractionMax PositionInteractionRange::get(
       detail::ParameterTraits<AzimuthInteractionMax>::tag) const {
-    return azimuthMax_.get();
+    return azimuthMax_.value();
   }
   ElevationInteractionMin PositionInteractionRange::get(
       detail::ParameterTraits<ElevationInteractionMin>::tag) const {
-    return elevationMin_.get();
+    return elevationMin_.value();
   }
   ElevationInteractionMax PositionInteractionRange::get(
       detail::ParameterTraits<ElevationInteractionMax>::tag) const {
-    return elevationMax_.get();
+    return elevationMax_.value();
   }
   DistanceInteractionMin PositionInteractionRange::get(
       detail::ParameterTraits<DistanceInteractionMin>::tag) const {
-    return distanceMin_.get();
+    return distanceMin_.value();
   }
   DistanceInteractionMax PositionInteractionRange::get(
       detail::ParameterTraits<DistanceInteractionMax>::tag) const {
-    return distanceMax_.get();
+    return distanceMax_.value();
   }
 
   // ---- Has ---- //
   bool PositionInteractionRange::has(
       detail::ParameterTraits<AzimuthInteractionMin>::tag) const {
-    return azimuthMin_ != boost::none;
+    return azimuthMin_ != std::nullopt;
   }
   bool PositionInteractionRange::has(
       detail::ParameterTraits<AzimuthInteractionMax>::tag) const {
-    return azimuthMax_ != boost::none;
+    return azimuthMax_ != std::nullopt;
   }
   bool PositionInteractionRange::has(
       detail::ParameterTraits<ElevationInteractionMin>::tag) const {
-    return elevationMin_ != boost::none;
+    return elevationMin_ != std::nullopt;
   }
   bool PositionInteractionRange::has(
       detail::ParameterTraits<ElevationInteractionMax>::tag) const {
-    return elevationMax_ != boost::none;
+    return elevationMax_ != std::nullopt;
   }
   bool PositionInteractionRange::has(
       detail::ParameterTraits<DistanceInteractionMin>::tag) const {
-    return distanceMin_ != boost::none;
+    return distanceMin_ != std::nullopt;
   }
   bool PositionInteractionRange::has(
       detail::ParameterTraits<DistanceInteractionMax>::tag) const {
-    return distanceMax_ != boost::none;
+    return distanceMax_ != std::nullopt;
   }
 
   // ---- isDefault ---- //
   bool PositionInteractionRange::isDefault(
       detail::ParameterTraits<AzimuthInteractionMin>::tag) const {
-    return azimuthMin_ == boost::none;
+    return azimuthMin_ == std::nullopt;
   }
   bool PositionInteractionRange::isDefault(
       detail::ParameterTraits<AzimuthInteractionMax>::tag) const {
-    return azimuthMax_ == boost::none;
+    return azimuthMax_ == std::nullopt;
   }
   bool PositionInteractionRange::isDefault(
       detail::ParameterTraits<ElevationInteractionMin>::tag) const {
-    return elevationMin_ == boost::none;
+    return elevationMin_ == std::nullopt;
   }
   bool PositionInteractionRange::isDefault(
       detail::ParameterTraits<ElevationInteractionMax>::tag) const {
-    return elevationMax_ == boost::none;
+    return elevationMax_ == std::nullopt;
   }
   bool PositionInteractionRange::isDefault(
       detail::ParameterTraits<DistanceInteractionMin>::tag) const {
-    return distanceMin_ == boost::none;
+    return distanceMin_ == std::nullopt;
   }
   bool PositionInteractionRange::isDefault(
       detail::ParameterTraits<DistanceInteractionMax>::tag) const {
-    return distanceMax_ == boost::none;
+    return distanceMax_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -105,27 +105,27 @@ namespace adm {
   // ---- Unsetter ---- //
   void PositionInteractionRange::unset(
       detail::ParameterTraits<AzimuthInteractionMin>::tag) {
-    azimuthMin_ = boost::none;
+    azimuthMin_ = std::nullopt;
   }
   void PositionInteractionRange::unset(
       detail::ParameterTraits<AzimuthInteractionMax>::tag) {
-    azimuthMax_ = boost::none;
+    azimuthMax_ = std::nullopt;
   }
   void PositionInteractionRange::unset(
       detail::ParameterTraits<ElevationInteractionMin>::tag) {
-    elevationMin_ = boost::none;
+    elevationMin_ = std::nullopt;
   }
   void PositionInteractionRange::unset(
       detail::ParameterTraits<ElevationInteractionMax>::tag) {
-    elevationMax_ = boost::none;
+    elevationMax_ = std::nullopt;
   }
   void PositionInteractionRange::unset(
       detail::ParameterTraits<DistanceInteractionMin>::tag) {
-    distanceMin_ = boost::none;
+    distanceMin_ = std::nullopt;
   }
   void PositionInteractionRange::unset(
       detail::ParameterTraits<DistanceInteractionMax>::tag) {
-    distanceMin_ = boost::none;
+    distanceMin_ = std::nullopt;
   }
 
   // ---- CARTESIAN POSITION ---- //
@@ -133,79 +133,79 @@ namespace adm {
   // ---- Getter ---- //
   XInteractionMin PositionInteractionRange::get(
       detail::ParameterTraits<XInteractionMin>::tag) const {
-    return xMin_.get();
+    return xMin_.value();
   }
   XInteractionMax PositionInteractionRange::get(
       detail::ParameterTraits<XInteractionMax>::tag) const {
-    return xMax_.get();
+    return xMax_.value();
   }
   YInteractionMin PositionInteractionRange::get(
       detail::ParameterTraits<YInteractionMin>::tag) const {
-    return yMin_.get();
+    return yMin_.value();
   }
   YInteractionMax PositionInteractionRange::get(
       detail::ParameterTraits<YInteractionMax>::tag) const {
-    return yMax_.get();
+    return yMax_.value();
   }
   ZInteractionMin PositionInteractionRange::get(
       detail::ParameterTraits<ZInteractionMin>::tag) const {
-    return zMin_.get();
+    return zMin_.value();
   }
   ZInteractionMax PositionInteractionRange::get(
       detail::ParameterTraits<ZInteractionMax>::tag) const {
-    return zMax_.get();
+    return zMax_.value();
   }
 
   // ---- Has ---- //
   bool PositionInteractionRange::has(
       detail::ParameterTraits<XInteractionMin>::tag) const {
-    return xMin_ != boost::none;
+    return xMin_ != std::nullopt;
   }
   bool PositionInteractionRange::has(
       detail::ParameterTraits<XInteractionMax>::tag) const {
-    return xMax_ != boost::none;
+    return xMax_ != std::nullopt;
   }
   bool PositionInteractionRange::has(
       detail::ParameterTraits<YInteractionMin>::tag) const {
-    return yMin_ != boost::none;
+    return yMin_ != std::nullopt;
   }
   bool PositionInteractionRange::has(
       detail::ParameterTraits<YInteractionMax>::tag) const {
-    return yMax_ != boost::none;
+    return yMax_ != std::nullopt;
   }
   bool PositionInteractionRange::has(
       detail::ParameterTraits<ZInteractionMin>::tag) const {
-    return zMin_ != boost::none;
+    return zMin_ != std::nullopt;
   }
   bool PositionInteractionRange::has(
       detail::ParameterTraits<ZInteractionMax>::tag) const {
-    return zMax_ != boost::none;
+    return zMax_ != std::nullopt;
   }
 
   // ---- isDefault ---- //
   bool PositionInteractionRange::isDefault(
       detail::ParameterTraits<XInteractionMin>::tag) const {
-    return xMin_ == boost::none;
+    return xMin_ == std::nullopt;
   }
   bool PositionInteractionRange::isDefault(
       detail::ParameterTraits<XInteractionMax>::tag) const {
-    return xMax_ == boost::none;
+    return xMax_ == std::nullopt;
   }
   bool PositionInteractionRange::isDefault(
       detail::ParameterTraits<YInteractionMin>::tag) const {
-    return yMin_ == boost::none;
+    return yMin_ == std::nullopt;
   }
   bool PositionInteractionRange::isDefault(
       detail::ParameterTraits<YInteractionMax>::tag) const {
-    return yMax_ == boost::none;
+    return yMax_ == std::nullopt;
   }
   bool PositionInteractionRange::isDefault(
       detail::ParameterTraits<ZInteractionMin>::tag) const {
-    return zMin_ == boost::none;
+    return zMin_ == std::nullopt;
   }
   bool PositionInteractionRange::isDefault(
       detail::ParameterTraits<ZInteractionMax>::tag) const {
-    return zMax_ == boost::none;
+    return zMax_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -219,27 +219,27 @@ namespace adm {
   // ---- Unsetter ---- //
   void PositionInteractionRange::unset(
       detail::ParameterTraits<XInteractionMin>::tag) {
-    xMin_ = boost::none;
+    xMin_ = std::nullopt;
   }
   void PositionInteractionRange::unset(
       detail::ParameterTraits<XInteractionMax>::tag) {
-    xMax_ = boost::none;
+    xMax_ = std::nullopt;
   }
   void PositionInteractionRange::unset(
       detail::ParameterTraits<YInteractionMin>::tag) {
-    yMin_ = boost::none;
+    yMin_ = std::nullopt;
   }
   void PositionInteractionRange::unset(
       detail::ParameterTraits<YInteractionMax>::tag) {
-    yMax_ = boost::none;
+    yMax_ = std::nullopt;
   }
   void PositionInteractionRange::unset(
       detail::ParameterTraits<ZInteractionMin>::tag) {
-    zMin_ = boost::none;
+    zMin_ = std::nullopt;
   }
   void PositionInteractionRange::unset(
       detail::ParameterTraits<ZInteractionMax>::tag) {
-    zMax_ = boost::none;
+    zMax_ = std::nullopt;
   }
 
 }  // namespace adm

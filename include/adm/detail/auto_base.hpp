@@ -2,8 +2,8 @@
 #include "adm/detail/auto_base_detail.hpp"
 #include "adm/detail/type_traits.hpp"
 #include "adm/export.h"
-#include "boost/optional.hpp"
-#include "boost/variant.hpp"
+#include <optional>
+#include <variant>
 #include <algorithm>
 
 // want to be able to override this from the tests
@@ -187,14 +187,14 @@ namespace adm {
       static constexpr bool has_get_set_has = true;
       static constexpr bool has_isDefault_unset = true;
 
-      ADM_BASE_EXPORT T get(Tag) const { return value_.get(); }
+      ADM_BASE_EXPORT T get(Tag) const { return value_.value(); }
       ADM_BASE_EXPORT void set(T value) { value_ = std::move(value); }
-      ADM_BASE_EXPORT bool has(Tag) const { return value_ != boost::none; }
+      ADM_BASE_EXPORT bool has(Tag) const { return value_ != std::nullopt; }
       ADM_BASE_EXPORT bool isDefault(Tag) const { return false; }
-      ADM_BASE_EXPORT void unset(Tag) { value_ = boost::none; }
+      ADM_BASE_EXPORT void unset(Tag) { value_ = std::nullopt; }
 
      private:
-      boost::optional<T> value_;
+      std::optional<T> value_;
     };
 
     /// base class with set/get/has/isDefault/unset methods for an optional
@@ -209,17 +209,17 @@ namespace adm {
       static constexpr bool has_isDefault_unset = true;
 
       ADM_BASE_EXPORT T get(Tag) const {
-        return boost::get_optional_value_or(value_, getDefault<T>());
+        return value_.value_or(getDefault<T>());
       }
       ADM_BASE_EXPORT void set(T value) { value_ = std::move(value); }
       ADM_BASE_EXPORT bool has(Tag) const { return true; }
       ADM_BASE_EXPORT bool isDefault(Tag) const {
-        return value_ == boost::none;
+        return value_ == std::nullopt;
       }
-      ADM_BASE_EXPORT void unset(Tag) { value_ = boost::none; }
+      ADM_BASE_EXPORT void unset(Tag) { value_ = std::nullopt; }
 
      private:
-      boost::optional<T> value_;
+      std::optional<T> value_;
     };
 
     template <typename T>
@@ -275,7 +275,7 @@ namespace adm {
     /// Base class for one type within a variant.
     ///
     /// VariantParam should be a parameter type like
-    /// OptionalParameter<boost::variant<...>>, and T should be one of the
+    /// OptionalParameter<std::variant<...>>, and T should be one of the
     /// types of the variant.
     template <typename VariantParam, typename T>
     class VariantTypeParameter : public virtual VariantParam {
@@ -286,7 +286,7 @@ namespace adm {
      public:
       using VariantParam::get;
       ADM_BASE_EXPORT T get(Tag) const {
-        return boost::get<T>(get(VariantTag{}));
+        return std::get<T>(get(VariantTag{}));
       }
 
       using VariantParam::set;
@@ -296,12 +296,14 @@ namespace adm {
 
       using VariantParam::has;
       ADM_BASE_EXPORT bool has(Tag) const {
-        return has(VariantTag{}) && get(VariantTag()).type() == typeid(T);
+        return has(VariantTag{}) &&
+               std::holds_alternative<T>(get(VariantTag{}));
       }
 
       using VariantParam::isDefault;
       ADM_BASE_EXPORT bool isDefault(Tag) const {
-        return isDefault(VariantTag()) && get(VariantTag()).type() == typeid(T);
+        return isDefault(VariantTag()) &&
+               std::holds_alternative<T>(get(VariantTag{}));
       }
 
       using VariantParam::unset;
@@ -314,14 +316,14 @@ namespace adm {
     struct VariantParameterHelper;
 
     template <typename VariantParam, typename... Ts>
-    struct VariantParameterHelper<VariantParam, boost::variant<Ts...>> {
+    struct VariantParameterHelper<VariantParam, std::variant<Ts...>> {
       using type = HasParameters<VariantTypeParameter<VariantParam, Ts>...>;
     };
 
     /// Wrapper which has methods for each type in a variant parameter.
     ///
     /// This should be used in HasParameters, with VariantParam being a
-    /// parameter like OptionalParameter<V>, where V is a boost::variant.
+    /// parameter like OptionalParameter<V>, where V is a std::variant.
     ///
     /// When using this with OptionalParameter<V>, the following classes should
     /// be explicitly instantiated:

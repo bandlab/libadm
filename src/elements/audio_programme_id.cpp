@@ -15,7 +15,7 @@ namespace adm {
   // ---- Getter ---- //
   AudioProgrammeIdValue AudioProgrammeId::get(
       detail::ParameterTraits<AudioProgrammeIdValue>::tag) const {
-    return boost::get_optional_value_or(value_, valueDefault_);
+    return value_.value_or(valueDefault_);
   }
 
   // ---- Has ---- //
@@ -27,7 +27,7 @@ namespace adm {
   // ---- isDefault ---- //
   bool AudioProgrammeId::isDefault(
       detail::ParameterTraits<AudioProgrammeIdValue>::tag) const {
-    return value_ == boost::none;
+    return value_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -36,7 +36,7 @@ namespace adm {
   // ---- Unsetter ---- //
   void AudioProgrammeId::unset(
       detail::ParameterTraits<AudioProgrammeIdValue>::tag) {
-    value_ = boost::none;
+    value_ = std::nullopt;
   }
 
   // ---- Operators ---- //

@@ -1,7 +1,7 @@
 /// @file audio_block_format_hoa.hpp
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include "adm/elements/time.hpp"
 #include "adm/elements/common_parameters.hpp"
 #include "adm/elements_fwd.hpp"

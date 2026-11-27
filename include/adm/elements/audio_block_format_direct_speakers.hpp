@@ -1,8 +1,8 @@
 /// @file audio_block_format_direct_speakers.hpp
 #pragma once
 
-#include <boost/optional.hpp>
-#include <boost/variant.hpp>
+#include <optional>
+#include <variant>
 #include "adm/elements/time.hpp"
 #include "adm/elements/audio_block_format_id.hpp"
 #include "adm/elements/common_parameters.hpp"
@@ -28,7 +28,7 @@ namespace adm {
 
   /// @brief NamedType for speaker position in an AudioBlockFormat
   using SpeakerPosition =
-      boost::variant<SphericalSpeakerPosition, CartesianSpeakerPosition>;
+      std::variant<SphericalSpeakerPosition, CartesianSpeakerPosition>;
   struct SpeakerPositionTag {};
   ADD_TRAIT(SpeakerPosition, SpeakerPostionTag);
 
@@ -198,8 +198,8 @@ namespace adm {
     ADM_EXPORT void unset(detail::ParameterTraits<SpeakerLabels>::tag);
 
     AudioBlockFormatId id_;
-    boost::optional<Rtime> rtime_;
-    boost::optional<Duration> duration_;
+    std::optional<Rtime> rtime_;
+    std::optional<Duration> duration_;
     SpeakerLabels speakerLabels_;
     SpeakerPosition speakerPosition_;
   };

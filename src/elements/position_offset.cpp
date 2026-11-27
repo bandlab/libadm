@@ -30,11 +30,11 @@ namespace adm {
   }
 
   bool isSpherical(const PositionOffset& offset) {
-    return offset.type() == typeid(SphericalPositionOffset);
+    return std::holds_alternative<SphericalPositionOffset>(offset);
   }
 
   bool isCartesian(const PositionOffset& offset) {
-    return offset.type() == typeid(CartesianPositionOffset);
+    return std::holds_alternative<CartesianPositionOffset>(offset);
   }
 
 }  // namespace adm

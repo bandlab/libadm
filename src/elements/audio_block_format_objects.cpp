@@ -20,8 +20,8 @@ namespace adm {
   // ---- Getter ---- //
   Cartesian AudioBlockFormatObjects::get(
       detail::ParameterTraits<Cartesian>::tag) const {
-    if (cartesian_ != boost::none) {
-      return cartesian_.get();
+    if (cartesian_ != std::nullopt) {
+      return cartesian_.value();
     } else {
       if (has<SphericalPosition>()) {
         return Cartesian(false);
@@ -33,35 +33,34 @@ namespace adm {
   Position AudioBlockFormatObjects::get(
       detail::ParameterTraits<detail::ParameterTraits<Position>>::tag) const {
     if (has<SphericalPosition>()) {
-      return Position(sphericalPosition_.get());
+      return Position(sphericalPosition_.value());
     } else {
-      return Position(cartesianPosition_.get());
+      return Position(cartesianPosition_.value());
     }
   }
   SphericalPosition AudioBlockFormatObjects::get(
       detail::ParameterTraits<SphericalPosition>::tag) const {
-    return sphericalPosition_.get();
+    return sphericalPosition_.value();
   }
   CartesianPosition AudioBlockFormatObjects::get(
       detail::ParameterTraits<CartesianPosition>::tag) const {
-    return cartesianPosition_.get();
+    return cartesianPosition_.value();
   }
   ScreenEdgeLock AudioBlockFormatObjects::get(
       detail::ParameterTraits<ScreenEdgeLock>::tag) const {
-    return screenEdgeLock_.get();
+    return screenEdgeLock_.value();
   }
   ChannelLock AudioBlockFormatObjects::get(
       detail::ParameterTraits<ChannelLock>::tag) const {
-    return boost::get_optional_value_or(channelLock_, channelLockDefault);
+    return channelLock_.value_or(channelLockDefault);
   }
   ObjectDivergence AudioBlockFormatObjects::get(
       detail::ParameterTraits<ObjectDivergence>::tag) const {
-    return boost::get_optional_value_or(objectDivergence_,
-                                        objectDivergenceDefault);
+    return objectDivergence_.value_or(objectDivergenceDefault);
   }
   JumpPosition AudioBlockFormatObjects::get(
       detail::ParameterTraits<JumpPosition>::tag) const {
-    return boost::get_optional_value_or(jumpPosition_, jumpPositionDefault);
+    return jumpPosition_.value_or(jumpPositionDefault);
   }
 
   // ---- Has ---- //
@@ -71,20 +70,20 @@ namespace adm {
   }
   bool AudioBlockFormatObjects::has(
       detail::ParameterTraits<detail::ParameterTraits<Position>>::tag) const {
-    return sphericalPosition_ != boost::none ||
-           cartesianPosition_ != boost::none;
+    return sphericalPosition_ != std::nullopt ||
+           cartesianPosition_ != std::nullopt;
   }
   bool AudioBlockFormatObjects::has(
       detail::ParameterTraits<SphericalPosition>::tag) const {
-    return sphericalPosition_ != boost::none;
+    return sphericalPosition_ != std::nullopt;
   }
   bool AudioBlockFormatObjects::has(
       detail::ParameterTraits<CartesianPosition>::tag) const {
-    return cartesianPosition_ != boost::none;
+    return cartesianPosition_ != std::nullopt;
   }
   bool AudioBlockFormatObjects::has(
       detail::ParameterTraits<ScreenEdgeLock>::tag) const {
-    return screenEdgeLock_ != boost::none;
+    return screenEdgeLock_ != std::nullopt;
   }
   bool AudioBlockFormatObjects::has(
       detail::ParameterTraits<ChannelLock>::tag) const {
@@ -102,19 +101,19 @@ namespace adm {
   // ---- isDefault ---- //
   bool AudioBlockFormatObjects::isDefault(
       detail::ParameterTraits<Cartesian>::tag) const {
-    return cartesian_ == boost::none;
+    return cartesian_ == std::nullopt;
   }
   bool AudioBlockFormatObjects::isDefault(
       detail::ParameterTraits<ChannelLock>::tag) const {
-    return channelLock_ == boost::none;
+    return channelLock_ == std::nullopt;
   }
   bool AudioBlockFormatObjects::isDefault(
       detail::ParameterTraits<ObjectDivergence>::tag) const {
-    return objectDivergence_ == boost::none;
+    return objectDivergence_ == std::nullopt;
   }
   bool AudioBlockFormatObjects::isDefault(
       detail::ParameterTraits<JumpPosition>::tag) const {
-    return jumpPosition_ == boost::none;
+    return jumpPosition_ == std::nullopt;
   }
 
   // ---- Setter ---- //
@@ -122,30 +121,30 @@ namespace adm {
     cartesian_ = cartesian;
 
     if (cartesian.get()) {
-      sphericalPosition_ = boost::none;
+      sphericalPosition_ = std::nullopt;
       if (!cartesianPosition_) cartesianPosition_ = CartesianPosition();
     } else {
-      cartesianPosition_ = boost::none;
+      cartesianPosition_ = std::nullopt;
       if (!sphericalPosition_) sphericalPosition_ = SphericalPosition();
     }
   }
   void AudioBlockFormatObjects::set(Position position) {
-    if (position.which() == 0) {
-      set(boost::get<SphericalPosition>(position));
-    } else if (position.which() == 1) {
-      set(boost::get<CartesianPosition>(position));
+    if (position.index() == 0) {
+      set(std::get<SphericalPosition>(position));
+    } else if (position.index() == 1) {
+      set(std::get<CartesianPosition>(position));
     }
   }
   void AudioBlockFormatObjects::set(SphericalPosition position) {
     sphericalPosition_ = position;
-    cartesianPosition_ = boost::none;
-    if (cartesian_ != boost::none) {
+    cartesianPosition_ = std::nullopt;
+    if (cartesian_ != std::nullopt) {
       cartesian_ = Cartesian(false);
     }
   }
   void AudioBlockFormatObjects::set(CartesianPosition position) {
     cartesianPosition_ = position;
-    sphericalPosition_ = boost::none;
+    sphericalPosition_ = std::nullopt;
     cartesian_ = Cartesian(true);
   }
   void AudioBlockFormatObjects::set(ScreenEdgeLock screenEdgeLock) {
@@ -163,39 +162,39 @@ namespace adm {
 
   // ---- Unsetter ---- //
   void AudioBlockFormatObjects::unset(detail::ParameterTraits<Cartesian>::tag) {
-    cartesian_ = boost::none;
+    cartesian_ = std::nullopt;
     if (!has<SphericalPosition>()) {
       set(SphericalPosition{});
     }
   }
   void AudioBlockFormatObjects::unset(
       detail::ParameterTraits<detail::ParameterTraits<Position>>::tag) {
-    sphericalPosition_ = boost::none;
-    cartesianPosition_ = boost::none;
+    sphericalPosition_ = std::nullopt;
+    cartesianPosition_ = std::nullopt;
   }
   void AudioBlockFormatObjects::unset(
       detail::ParameterTraits<SphericalPosition>::tag) {
-    sphericalPosition_ = boost::none;
+    sphericalPosition_ = std::nullopt;
   }
   void AudioBlockFormatObjects::unset(
       detail::ParameterTraits<CartesianPosition>::tag) {
-    cartesianPosition_ = boost::none;
+    cartesianPosition_ = std::nullopt;
   }
   void AudioBlockFormatObjects::unset(
       detail::ParameterTraits<ScreenEdgeLock>::tag) {
-    screenEdgeLock_ = boost::none;
+    screenEdgeLock_ = std::nullopt;
   }
   void AudioBlockFormatObjects::unset(
       detail::ParameterTraits<ChannelLock>::tag) {
-    channelLock_ = boost::none;
+    channelLock_ = std::nullopt;
   }
   void AudioBlockFormatObjects::unset(
       detail::ParameterTraits<ObjectDivergence>::tag) {
-    objectDivergence_ = boost::none;
+    objectDivergence_ = std::nullopt;
   }
   void AudioBlockFormatObjects::unset(
       detail::ParameterTraits<JumpPosition>::tag) {
-    jumpPosition_ = boost::none;
+    jumpPosition_ = std::nullopt;
   }
 
 }  // namespace adm

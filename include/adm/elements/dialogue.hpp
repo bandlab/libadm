@@ -1,7 +1,7 @@
 /// @file dialogue.hpp
 #pragma once
 
-#include <boost/variant.hpp>
+#include <variant>
 #include "adm/detail/named_type.hpp"
 #include "adm/detail/type_traits.hpp"
 #include "adm/export.h"
@@ -98,8 +98,8 @@ namespace adm {
 
   ///@brief Type to hold a NonDialogueContentKind, DialogueContentKind or
   /// MixedContentKind
-  typedef boost::variant<NonDialogueContentKind, DialogueContentKind,
-                         MixedContentKind>
+  typedef std::variant<NonDialogueContentKind, DialogueContentKind,
+                       MixedContentKind>
       ContentKind;
 
   ADD_TRAIT(ContentKind, ContentKindTag);

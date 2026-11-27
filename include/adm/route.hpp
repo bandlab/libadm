@@ -1,7 +1,7 @@
 #pragma once
 #include "adm/element_variant.hpp"
 #include "adm/elements.hpp"
-#include <boost/functional/hash.hpp>
+#include <adm/detail/hash.hpp>
 #include <vector>
 #include <algorithm>
 #include <memory>
@@ -48,11 +48,11 @@ namespace adm {
       route_.push_back(element);
       using ElementId = typename Element::id_type;
       auto id = element->template get<ElementId>();
-      boost::hash_combine(hash_, adm::formatId(id));
+      detail::hashCombine(hash_, adm::formatId(id));
     }
 
     void add(adm::ElementConstVariant element) {
-      boost::apply_visitor(AddVisitor(*this), element);
+      std::visit(AddVisitor(*this), element);
     }
 
     template <typename Element>
@@ -81,7 +81,7 @@ namespace adm {
     hash_type hash() const { return hash_; }
 
    private:
-    struct AddVisitor : public boost::static_visitor<> {
+    struct AddVisitor {
       explicit AddVisitor(Route& admRoute) : admRoute_(admRoute) {}
 
       template <typename Element>
@@ -112,7 +112,7 @@ namespace adm {
   std::shared_ptr<const Element> Route::getFirstOf() const {
     auto foundFirst = findFirstOf<Element>();
     if (foundFirst != route_.end()) {
-      return boost::get<std::shared_ptr<const Element>>(*foundFirst);
+      return std::get<std::shared_ptr<const Element>>(*foundFirst);
     } else {
       return nullptr;
     }
@@ -136,7 +136,7 @@ namespace adm {
   std::shared_ptr<const Element> Route::getLastOf() const {
     const_iterator foundLast = findLastOf<Element>();
     if (foundLast != route_.end()) {
-      return boost::get<std::shared_ptr<const Element>>(*foundLast);
+      return std::get<std::shared_ptr<const Element>>(*foundLast);
     } else {
       return nullptr;
     }
@@ -148,7 +148,7 @@ namespace adm {
     for (auto ritem : route_) {
       if (isVariantType<std::shared_ptr<const Element>, ElementConstVariant>(
               ritem)) {
-        vec.push_back(boost::get<std::shared_ptr<const Element>>(ritem));
+        vec.push_back(std::get<std::shared_ptr<const Element>>(ritem));
       }
     }
     return vec;

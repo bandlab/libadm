@@ -4,7 +4,7 @@
 #include <chrono>
 #include <stdexcept>
 #include <string>
-#include <boost/variant.hpp>
+#include <variant>
 #include "adm/detail/auto_base.hpp"
 #include "adm/detail/named_type.hpp"
 #include "adm/export.h"
@@ -37,6 +37,9 @@ namespace adm {
     /// factors
     ADM_EXPORT FractionalTime normalised() const;
 
+    /// Returns a normalised difference; throws std::overflow_error on overflow.
+    ADM_EXPORT FractionalTime operator-(const FractionalTime& other) const;
+
    private:
     int64_t _numerator;
     int64_t _denominator;
@@ -60,11 +63,13 @@ namespace adm {
     ADM_EXPORT FractionalTime asFractional() const;
 
     bool isNanoseconds() const {
-      return time.type() == typeid(std::chrono::nanoseconds);
+      return std::holds_alternative<std::chrono::nanoseconds>(time);
     }
-    bool isFractional() const { return time.type() == typeid(FractionalTime); };
+    bool isFractional() const {
+      return std::holds_alternative<FractionalTime>(time);
+    };
 
-    using Variant = boost::variant<std::chrono::nanoseconds, FractionalTime>;
+    using Variant = std::variant<std::chrono::nanoseconds, FractionalTime>;
     const Variant& asVariant() const { return time; }
 
     bool operator==(const Time& other) const { return time == other.time; }

@@ -34,28 +34,29 @@ namespace adm {
     auto elements = copyAllElements(shared_from_this());
     if (has<Version>()) copy->set(get<Version>());
     for (auto& e : elements) {
-      if (auto v = boost::get<std::shared_ptr<AudioProgramme>>(&e)) {
+      if (auto v = std::get_if<std::shared_ptr<AudioProgramme>>(&e)) {
         AudioProgrammeAttorney::setParent(*v, copy);
         copy->audioProgrammes_.push_back(*v);
-      } else if (auto v = boost::get<std::shared_ptr<AudioContent>>(&e)) {
+      } else if (auto v = std::get_if<std::shared_ptr<AudioContent>>(&e)) {
         AudioContentAttorney::setParent(*v, copy);
         copy->audioContents_.push_back(*v);
-      } else if (auto v = boost::get<std::shared_ptr<AudioObject>>(&e)) {
+      } else if (auto v = std::get_if<std::shared_ptr<AudioObject>>(&e)) {
         AudioObjectAttorney::setParent(*v, copy);
         copy->audioObjects_.push_back(*v);
-      } else if (auto v = boost::get<std::shared_ptr<AudioPackFormat>>(&e)) {
+      } else if (auto v = std::get_if<std::shared_ptr<AudioPackFormat>>(&e)) {
         AudioPackFormatAttorney::setParent(*v, copy);
         copy->audioPackFormats_.push_back(*v);
-      } else if (auto v = boost::get<std::shared_ptr<AudioChannelFormat>>(&e)) {
+      } else if (auto v =
+                     std::get_if<std::shared_ptr<AudioChannelFormat>>(&e)) {
         AudioChannelFormatAttorney::setParent(*v, copy);
         copy->audioChannelFormats_.push_back(*v);
-      } else if (auto v = boost::get<std::shared_ptr<AudioStreamFormat>>(&e)) {
+      } else if (auto v = std::get_if<std::shared_ptr<AudioStreamFormat>>(&e)) {
         AudioStreamFormatAttorney::setParent(*v, copy);
         copy->audioStreamFormats_.push_back(*v);
-      } else if (auto v = boost::get<std::shared_ptr<AudioTrackFormat>>(&e)) {
+      } else if (auto v = std::get_if<std::shared_ptr<AudioTrackFormat>>(&e)) {
         AudioTrackFormatAttorney::setParent(*v, copy);
         copy->audioTrackFormats_.push_back(*v);
-      } else if (auto v = boost::get<std::shared_ptr<AudioTrackUid>>(&e)) {
+      } else if (auto v = std::get_if<std::shared_ptr<AudioTrackUid>>(&e)) {
         AudioTrackUidAttorney::setParent(*v, copy);
         copy->audioTrackUids_.push_back(*v);
       }
