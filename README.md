@@ -24,16 +24,20 @@ and no Boost; public Boost types are replaced by their `std` equivalents.
 `FractionalTime::normalised()` and `FractionalTime::operator-`. Const element
 range iterators must not outlive the range.
 
-### Generic XML
+### ADM XML DOM
 
-`DomNode::childElement()`, `nextSiblingElement()` and `attributeValue()` match local names, ignoring
-prefixes without resolving namespace URIs. The first matching element or
-attribute wins. Existing `firstNode()` and `attribute()` match qualified names
-exactly.
+`adm/xml.hpp` exposes an owning `adm::xml::DomDocument` and non-owning
+`DomNode` handles: the DOM of a whole ADM XML file, for content the ADM object
+model drops, such as custom metadata next to `audioFormatExtended`. They are
+not a general-purpose XML API. Node handles and returned string views require
+the document to remain alive; parsing again invalidates them after a
+successful parse.
 
-`adm/xml.hpp` exposes an owning `adm::xml::DomDocument` and non-owning `DomNode`
-handles. Node handles and returned string views require the document to remain
-alive; parsing again invalidates them after a successful parse.
+`DomNode::childElement()`, `nextSiblingElement()` and `attributeValue()`
+match local names, ignoring prefixes without resolving namespace URIs. The
+first matching element or attribute wins. Existing `firstNode()` and
+`attribute()` match qualified names exactly.
+
 `adm::parseXml(dom, options)` builds an ADM model from an already parsed
 `DomDocument` without parsing XML again or consuming its custom nodes. The
 returned ADM model owns its data independently of the DOM.
@@ -55,9 +59,8 @@ searches descendants in document order. Names are matched literally, including
 namespace prefixes. Mutators allocate document-owned strings and serialization
 escapes text/attributes. `setValue` replaces a node's entire content.
 
-Generic XML, ADM and frame-header parsers validate closing tags. RapidXML
-rejects nesting deeper than 128 elements instead of recursing further. DTDs are
-not resolved or used to load external entities. Parse errors throw exceptions.
+The DOM, ADM and frame-header parsers validate closing tags. DTDs are not
+resolved or used to load external entities. Parse errors throw exceptions.
 
 ## Features
 

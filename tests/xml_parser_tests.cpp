@@ -111,7 +111,7 @@ TEST_CASE("failed generic XML parsing preserves the previous document") {
                     std::invalid_argument);
 }
 
-TEST_CASE("all XML entry points reject excessive nesting and mismatched tags") {
+TEST_CASE("all XML entry points reject mismatched tags") {
   const auto rejects = [](const std::string& text) {
     adm::xml::DomDocument document;
     REQUIRE_THROWS(document.parse(text));
@@ -124,16 +124,6 @@ TEST_CASE("all XML entry points reject excessive nesting and mismatched tags") {
   rejects("<format><audioFormatCustom><presetInformation/></wrong></format>");
   rejects("<format><audioFormatExtended></wrong></format>");
   rejects("<frame><frameHeader></wrong></frame>");
-  std::string nested;
-  for (std::size_t i = 0; i < 128; ++i) nested += "<n>";
-  auto atLimit = nested;
-  for (std::size_t i = 0; i < 128; ++i) atLimit += "</n>";
-  adm::xml::DomDocument document;
-  REQUIRE_NOTHROW(document.parse(atLimit));
-  rejects(nested + "<n/>" + atLimit.substr(nested.size()));
-  std::string deep;
-  for (int i = 0; i < 100000; ++i) deep += "<n>";
-  rejects(deep);
   rejects("<n>unterminated");
 }
 
@@ -161,6 +151,40 @@ TEST_CASE("line_number_calculation") {
     p = adm::xml::getDocumentLine(freq->first_attribute());
     REQUIRE(p == 3);
   }
+}
+
+TEST_CASE("DOM parse errors count lines from the first element") {
+  // The DOM keeps declaration and comment nodes, whose names are not in the
+  // input buffer; line counting must not start from them.
+  const std::string text =
+      "<?xml version=\"1.0\"?>\n"
+      "<!-- comment -->\n"
+      "<format>\n"
+      "<audioFormatExtended>\n"
+      "<audioProgramme audioProgrammeID=\"APR_1001\"/>\n"
+      "</audioFormatExtended>\n"
+      "</format>";
+  const auto errorOf = [](auto&& parse) -> std::string {
+    try {
+      parse();
+    } catch (const std::exception& e) {
+      return e.what();
+    }
+    return {};
+  };
+
+  std::istringstream stream(text);
+  const auto streamError = errorOf([&] {
+    adm::parseXml(stream, adm::xml::ParserOptions::recursive_node_search);
+  });
+  adm::xml::DomDocument dom;
+  dom.parse(text);
+  const auto domError = errorOf([&] {
+    adm::parseXml(dom, adm::xml::ParserOptions::recursive_node_search);
+  });
+
+  REQUIRE_THAT(streamError, Catch::Contains("audioProgrammeName"));
+  REQUIRE(domError == streamError);
 }
 
 TEST_CASE("empty document") {

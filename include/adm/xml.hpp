@@ -43,7 +43,10 @@ namespace adm::xml {
     rapidxml::xml_node<char>* node_ = nullptr;
   };
 
-  /// Owning generic XML DOM, independent of the ADM object model.
+  /// Owning DOM of a whole ADM XML file, for content the ADM object model
+  /// drops, such as custom metadata next to `audioFormatExtended`.
+  /// `adm::parseXml` builds the model from the same DOM. Not a
+  /// general-purpose XML API.
   class ADM_EXPORT DomDocument {
    public:
     DomDocument();
